@@ -1,5 +1,8 @@
 import { BrandIndicator, CompanyStrategy, BonusRatioSuggestion, BonusScheme, BonusPackage, AvailableIndicator } from '../types/bonus';
 
+/** 统一结果指标名称 */
+export const RESULT_PDOT_TARGET = '全渠道PDOT份额（目标市场）';
+
 /** 奖金页产品列；可选 subBrands 用于未来「组合列」表头 */
 export type BonusBrandColumn = {
   id: string;
@@ -25,9 +28,20 @@ export const mockBrandIndicators: BrandIndicator[] = [
     brandName: '产品1',
     category: 'Tier1',
     indicatorType: 'result',
-    indicatorName: '全渠道PDOT份额(相关分子式)',
+    indicatorName: RESULT_PDOT_TARGET,
     subCategory: '份额/片数增长',
     currentValue: 10,
+    targetValue: 12,
+    unit: '%',
+  },
+  {
+    id: 'ind-product1-result-2',
+    brandName: '产品1',
+    category: 'Tier1',
+    indicatorType: 'result',
+    indicatorName: '销量增长率',
+    subCategory: '销量增长',
+    currentValue: 8,
     targetValue: 12,
     unit: '%',
   },
@@ -36,7 +50,7 @@ export const mockBrandIndicators: BrandIndicator[] = [
     brandName: '产品1',
     category: 'Tier1',
     indicatorType: 'process',
-    indicatorName: '渠道份额',
+    indicatorName: '医院渠道份额',
     hospitalType: 'core',
     currentValue: 60,
     targetValue: 70,
@@ -62,17 +76,6 @@ export const mockBrandIndicators: BrandIndicator[] = [
     hospitalType: 'core',
     currentValue: 70,
     targetValue: 75,
-    unit: '%',
-  },
-  {
-    id: 'ind-product1-process-4',
-    brandName: '产品1',
-    category: 'Tier1',
-    indicatorType: 'process',
-    indicatorName: '渠道份额',
-    hospitalType: 'target',
-    currentValue: 50,
-    targetValue: 60,
     unit: '%',
   },
   {
@@ -104,10 +107,21 @@ export const mockBrandIndicators: BrandIndicator[] = [
     brandName: '产品2',
     category: 'Tier1',
     indicatorType: 'result',
-    indicatorName: '全渠道PDOT份额(CCB)',
+    indicatorName: RESULT_PDOT_TARGET,
     subCategory: '份额/片数增长',
     currentValue: 6,
     targetValue: 8,
+    unit: '%',
+  },
+  {
+    id: 'ind-norvasc-result-2',
+    brandName: '产品2',
+    category: 'Tier1',
+    indicatorType: 'result',
+    indicatorName: '销量增长率',
+    subCategory: '销量增长',
+    currentValue: 5,
+    targetValue: 10,
     unit: '%',
   },
   {
@@ -115,7 +129,7 @@ export const mockBrandIndicators: BrandIndicator[] = [
     brandName: '产品2',
     category: 'Tier1',
     indicatorType: 'process',
-    indicatorName: '渠道份额',
+    indicatorName: '医院渠道份额',
     hospitalType: 'core',
     currentValue: 55,
     targetValue: 65,
@@ -141,17 +155,6 @@ export const mockBrandIndicators: BrandIndicator[] = [
     hospitalType: 'core',
     currentValue: 65,
     targetValue: 70,
-    unit: '%',
-  },
-  {
-    id: 'ind-norvasc-process-4',
-    brandName: '产品2',
-    category: 'Tier1',
-    indicatorType: 'process',
-    indicatorName: '渠道份额',
-    hospitalType: 'target',
-    currentValue: 45,
-    targetValue: 55,
     unit: '%',
   },
   {
@@ -183,10 +186,21 @@ export const mockBrandIndicators: BrandIndicator[] = [
     brandName: '产品3',
     category: 'Tier2',
     indicatorType: 'result',
-    indicatorName: '渠道PDOT份额(分子式G/分子式D)',
+    indicatorName: RESULT_PDOT_TARGET,
     subCategory: '份额/片数增长',
     currentValue: 5,
     targetValue: 8,
+    unit: '%',
+  },
+  {
+    id: 'ind-product3-result-2',
+    brandName: '产品3',
+    category: 'Tier2',
+    indicatorType: 'result',
+    indicatorName: '销量增长率',
+    subCategory: '销量增长',
+    currentValue: 4,
+    targetValue: 9,
     unit: '%',
   },
   {
@@ -194,7 +208,7 @@ export const mockBrandIndicators: BrandIndicator[] = [
     brandName: '产品3',
     category: 'Tier2',
     indicatorType: 'process',
-    indicatorName: '渠道份额',
+    indicatorName: '医院渠道份额',
     hospitalType: 'core',
     currentValue: 50,
     targetValue: 60,
@@ -220,17 +234,6 @@ export const mockBrandIndicators: BrandIndicator[] = [
     hospitalType: 'core',
     currentValue: 60,
     targetValue: 70,
-    unit: '%',
-  },
-  {
-    id: 'ind-product3-process-4',
-    brandName: '产品3',
-    category: 'Tier2',
-    indicatorType: 'process',
-    indicatorName: '渠道份额',
-    hospitalType: 'target',
-    currentValue: 40,
-    targetValue: 50,
     unit: '%',
   },
   {
@@ -262,10 +265,21 @@ export const mockBrandIndicators: BrandIndicator[] = [
     brandName: '产品4',
     category: 'Tier2',
     indicatorType: 'result',
-    indicatorName: '渠道PDOT份额(分子式G/分子式D)',
+    indicatorName: RESULT_PDOT_TARGET,
     subCategory: '份额/片数增长',
     currentValue: 3,
     targetValue: 5,
+    unit: '%',
+  },
+  {
+    id: 'ind-product4-result-2',
+    brandName: '产品4',
+    category: 'Tier2',
+    indicatorType: 'result',
+    indicatorName: '销量增长率',
+    subCategory: '销量增长',
+    currentValue: 2,
+    targetValue: 6,
     unit: '%',
   },
   {
@@ -273,7 +287,7 @@ export const mockBrandIndicators: BrandIndicator[] = [
     brandName: '产品4',
     category: 'Tier2',
     indicatorType: 'process',
-    indicatorName: '渠道份额',
+    indicatorName: '医院渠道份额',
     hospitalType: 'core',
     currentValue: 48,
     targetValue: 58,
@@ -299,17 +313,6 @@ export const mockBrandIndicators: BrandIndicator[] = [
     hospitalType: 'core',
     currentValue: 58,
     targetValue: 68,
-    unit: '%',
-  },
-  {
-    id: 'ind-product4-process-4',
-    brandName: '产品4',
-    category: 'Tier2',
-    indicatorType: 'process',
-    indicatorName: '渠道份额',
-    hospitalType: 'target',
-    currentValue: 38,
-    targetValue: 48,
     unit: '%',
   },
   {
@@ -341,10 +344,21 @@ export const mockBrandIndicators: BrandIndicator[] = [
     brandName: '产品5',
     category: 'Tier2',
     indicatorType: 'result',
-    indicatorName: '渠道PDOT份额(目标市场)',
+    indicatorName: RESULT_PDOT_TARGET,
     subCategory: '份额/片数增长',
     currentValue: 4,
     targetValue: 6,
+    unit: '%',
+  },
+  {
+    id: 'ind-product5-result-2',
+    brandName: '产品5',
+    category: 'Tier2',
+    indicatorType: 'result',
+    indicatorName: '销量增长率',
+    subCategory: '销量增长',
+    currentValue: 3,
+    targetValue: 8,
     unit: '%',
   },
   {
@@ -352,7 +366,7 @@ export const mockBrandIndicators: BrandIndicator[] = [
     brandName: '产品5',
     category: 'Tier2',
     indicatorType: 'process',
-    indicatorName: '渠道份额',
+    indicatorName: '医院渠道份额',
     hospitalType: 'core',
     currentValue: 45,
     targetValue: 55,
@@ -410,36 +424,23 @@ export const mockCompanyStrategies: CompanyStrategy[] = [
   },
 ];
 
+const ALL_FIVE_BRANDS = ['产品1', '产品2', '产品3', '产品4', '产品5'];
+
 // 可用的指标池（用于拖拽添加）
 export const availableIndicators: AvailableIndicator[] = [
-  // 结果指标
   {
     id: 'avail-result-1',
-    name: '全渠道PDOT份额(相关分子式)',
+    name: RESULT_PDOT_TARGET,
     type: 'result',
     category: '份额/片数增长',
-    applicableBrands: ['产品1'],
+    applicableBrands: ALL_FIVE_BRANDS,
   },
   {
     id: 'avail-result-2',
-    name: '全渠道PDOT份额(CCB)',
+    name: '销量增长率',
     type: 'result',
-    category: '份额/片数增长',
-    applicableBrands: ['产品2'],
-  },
-  {
-    id: 'avail-result-3',
-    name: '渠道PDOT份额(分子式G/分子式D)',
-    type: 'result',
-    category: '份额/片数增长',
-    applicableBrands: ['产品3', '产品4'],
-  },
-  {
-    id: 'avail-result-4',
-    name: '渠道PDOT份额(目标市场)',
-    type: 'result',
-    category: '份额/片数增长',
-    applicableBrands: ['产品5'],
+    category: '销量增长',
+    applicableBrands: ALL_FIVE_BRANDS,
   },
   {
     id: 'avail-result-7',
@@ -448,12 +449,11 @@ export const availableIndicators: AvailableIndicator[] = [
     category: 'ROI',
   },
 
-  // 过程指标 - 核心渠道
   {
     id: 'avail-process-1',
-    name: '渠道份额',
+    name: '医院渠道份额',
     type: 'process',
-    category: '渠道份额',
+    category: '医院渠道份额',
     hospitalType: 'core',
   },
   {
@@ -485,16 +485,6 @@ export const availableIndicators: AvailableIndicator[] = [
     hospitalType: 'core',
   },
 
-  // 过程指标 - 渠道1
-  {
-    id: 'avail-process-6',
-    name: '渠道份额',
-    type: 'process',
-    category: '渠道份额',
-    hospitalType: 'target',
-  },
-
-  // 过程指标 - 服务型终端
   {
     id: 'avail-process-7',
     name: '动销率',
@@ -518,13 +508,13 @@ export const initialBonusPackages: BonusPackage[] = [
     brandName: '产品1',
     totalRatio: 38,
     resultIndicators: [
-      { indicatorId: 'ind-product1-result-1', indicatorName: '全渠道PDOT份额(相关分子式)', ratio: 15.2, subCategory: '份额/片数增长' },
+      { indicatorId: 'ind-product1-result-1', indicatorName: RESULT_PDOT_TARGET, ratio: 10, subCategory: '份额/片数增长' },
+      { indicatorId: 'ind-product1-result-2', indicatorName: '销量增长率', ratio: 5.2, subCategory: '销量增长' },
     ],
     processIndicators: [
-      { indicatorId: 'ind-product1-process-1', indicatorName: '渠道份额', ratio: 7.6, hospitalType: 'core' },
+      { indicatorId: 'ind-product1-process-1', indicatorName: '医院渠道份额', ratio: 10.64, hospitalType: 'core' },
       { indicatorId: 'ind-product1-process-2', indicatorName: '稳定分销率', ratio: 4.56, hospitalType: 'core' },
       { indicatorId: 'ind-product1-process-3', indicatorName: '核心渠道覆盖率', ratio: 4.56, hospitalType: 'core' },
-      { indicatorId: 'ind-product1-process-4', indicatorName: '渠道份额', ratio: 3.04, hospitalType: 'target' },
       { indicatorId: 'ind-product1-process-5', indicatorName: '动销率', ratio: 3.04, hospitalType: 'service' },
     ],
   },
@@ -533,13 +523,13 @@ export const initialBonusPackages: BonusPackage[] = [
     brandName: '产品2',
     totalRatio: 23,
     resultIndicators: [
-      { indicatorId: 'ind-norvasc-result-1', indicatorName: '全渠道PDOT份额(CCB)', ratio: 9.2, subCategory: '份额/片数增长' },
+      { indicatorId: 'ind-norvasc-result-1', indicatorName: RESULT_PDOT_TARGET, ratio: 6, subCategory: '份额/片数增长' },
+      { indicatorId: 'ind-norvasc-result-2', indicatorName: '销量增长率', ratio: 3.2, subCategory: '销量增长' },
     ],
     processIndicators: [
-      { indicatorId: 'ind-norvasc-process-1', indicatorName: '渠道份额', ratio: 4.6, hospitalType: 'core' },
+      { indicatorId: 'ind-norvasc-process-1', indicatorName: '医院渠道份额', ratio: 6.13, hospitalType: 'core' },
       { indicatorId: 'ind-norvasc-process-2', indicatorName: '稳定分销率', ratio: 3.07, hospitalType: 'core' },
       { indicatorId: 'ind-norvasc-process-3', indicatorName: '核心渠道覆盖率', ratio: 3.07, hospitalType: 'core' },
-      { indicatorId: 'ind-norvasc-process-4', indicatorName: '渠道份额', ratio: 1.53, hospitalType: 'target' },
       { indicatorId: 'ind-norvasc-process-5', indicatorName: '动销率', ratio: 1.53, hospitalType: 'service' },
     ],
   },
@@ -548,13 +538,13 @@ export const initialBonusPackages: BonusPackage[] = [
     brandName: '产品3',
     totalRatio: 18,
     resultIndicators: [
-      { indicatorId: 'ind-product3-result-1', indicatorName: '渠道PDOT份额(分子式G/分子式D)', ratio: 7.5, subCategory: '份额/片数增长' },
+      { indicatorId: 'ind-product3-result-1', indicatorName: RESULT_PDOT_TARGET, ratio: 5, subCategory: '份额/片数增长' },
+      { indicatorId: 'ind-product3-result-2', indicatorName: '销量增长率', ratio: 2.5, subCategory: '销量增长' },
     ],
     processIndicators: [
-      { indicatorId: 'ind-product3-process-1', indicatorName: '渠道份额', ratio: 4.5, hospitalType: 'core' },
+      { indicatorId: 'ind-product3-process-1', indicatorName: '医院渠道份额', ratio: 5.25, hospitalType: 'core' },
       { indicatorId: 'ind-product3-process-2', indicatorName: '稳定分销率', ratio: 1.5, hospitalType: 'core' },
       { indicatorId: 'ind-product3-process-3', indicatorName: '核心渠道覆盖率', ratio: 3, hospitalType: 'core' },
-      { indicatorId: 'ind-product3-process-4', indicatorName: '渠道份额', ratio: 0.75, hospitalType: 'target' },
       { indicatorId: 'ind-product3-process-5', indicatorName: '动销率', ratio: 0.75, hospitalType: 'service' },
     ],
   },
@@ -563,13 +553,13 @@ export const initialBonusPackages: BonusPackage[] = [
     brandName: '产品4',
     totalRatio: 9,
     resultIndicators: [
-      { indicatorId: 'ind-product4-result-1', indicatorName: '渠道PDOT份额(分子式G/分子式D)', ratio: 3.75, subCategory: '份额/片数增长' },
+      { indicatorId: 'ind-product4-result-1', indicatorName: RESULT_PDOT_TARGET, ratio: 2.5, subCategory: '份额/片数增长' },
+      { indicatorId: 'ind-product4-result-2', indicatorName: '销量增长率', ratio: 1.25, subCategory: '销量增长' },
     ],
     processIndicators: [
-      { indicatorId: 'ind-product4-process-1', indicatorName: '渠道份额', ratio: 2.25, hospitalType: 'core' },
+      { indicatorId: 'ind-product4-process-1', indicatorName: '医院渠道份额', ratio: 2.625, hospitalType: 'core' },
       { indicatorId: 'ind-product4-process-2', indicatorName: '稳定分销率', ratio: 0.75, hospitalType: 'core' },
       { indicatorId: 'ind-product4-process-3', indicatorName: '核心渠道覆盖率', ratio: 1.5, hospitalType: 'core' },
-      { indicatorId: 'ind-product4-process-4', indicatorName: '渠道份额', ratio: 0.375, hospitalType: 'target' },
       { indicatorId: 'ind-product4-process-5', indicatorName: '动销率', ratio: 0.375, hospitalType: 'service' },
     ],
   },
@@ -578,10 +568,11 @@ export const initialBonusPackages: BonusPackage[] = [
     brandName: '产品5',
     totalRatio: 12,
     resultIndicators: [
-      { indicatorId: 'ind-product5-result-1', indicatorName: '渠道PDOT份额(目标市场)', ratio: 6, subCategory: '份额/片数增长' },
+      { indicatorId: 'ind-product5-result-1', indicatorName: RESULT_PDOT_TARGET, ratio: 4, subCategory: '份额/片数增长' },
+      { indicatorId: 'ind-product5-result-2', indicatorName: '销量增长率', ratio: 2, subCategory: '销量增长' },
     ],
     processIndicators: [
-      { indicatorId: 'ind-product5-process-1', indicatorName: '渠道份额', ratio: 3, hospitalType: 'core' },
+      { indicatorId: 'ind-product5-process-1', indicatorName: '医院渠道份额', ratio: 3, hospitalType: 'core' },
       { indicatorId: 'ind-product5-process-2', indicatorName: '稳定分销率', ratio: 1.5, hospitalType: 'core' },
       { indicatorId: 'ind-product5-process-3', indicatorName: '核心渠道覆盖率', ratio: 1.5, hospitalType: 'core' },
     ],

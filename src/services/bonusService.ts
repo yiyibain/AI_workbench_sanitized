@@ -366,7 +366,7 @@ export async function understandStrategyAndAdjust(
       "indicatorAdjustments": [
         {
           "indicatorId": "ind-pain-result-1",
-          "indicatorName": "医院PDOT份额(分子式G/分子式D)",
+          "indicatorName": "全渠道PDOT份额（目标市场）",
           "type": "result",
           "ratioChange": 1
         }
