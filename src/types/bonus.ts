@@ -20,13 +20,14 @@ export interface BonusDesignSuggestion {
 export interface BrandIndicator {
   id: string;
   brandName: string;
-  category: 'CV' | 'Non-CV'; // 心血管 vs 非心血管
+  category: 'Tier1' | 'Tier2'; // 目标治疗领域 vs 非目标治疗领域
   indicatorType: 'result' | 'process'; // 结果指标 vs 过程指标
-  indicatorName: string; // 指标名称，如"解限率"、"渗透率"、"销量增长率"
+  indicatorName: string; // 指标名称，如"准入率"、"渗透率"、"销量增长率"
   currentValue?: number; // 当前值
   targetValue?: number; // 目标值
   unit?: string; // 单位，如"%", "万元"
-  hospitalType?: 'core' | 'target' | 'service'; // 医院类型：核心影响型、目标影响型、服务型终端
+  channelType?: 'core' | 'target' | 'service'; // 渠道类型：核心渠道、渠道1、渠道2
+  hospitalType?: 'core' | 'target' | 'service'; // 兼容历史字段
   subCategory?: string; // 子分类，如"份额/片数增长"、"ROI"等
 }
 
@@ -45,7 +46,8 @@ export interface BonusPackage {
     indicatorId: string;
     indicatorName: string;
     ratio: number; // 该指标在总奖金包中的占比
-    hospitalType?: 'core' | 'target' | 'service';
+    channelType?: 'core' | 'target' | 'service';
+    hospitalType?: 'core' | 'target' | 'service'; // 兼容历史字段
   }[];
 }
 
@@ -55,7 +57,8 @@ export interface AvailableIndicator {
   name: string;
   type: 'result' | 'process';
   category: string; // 分类，如"份额/片数增长"、"渗透率"等
-  hospitalType?: 'core' | 'target' | 'service';
+  channelType?: 'core' | 'target' | 'service';
+  hospitalType?: 'core' | 'target' | 'service'; // 兼容历史字段
   applicableBrands?: string[]; // 适用的品牌，如果为空则适用于所有品牌
 }
 
@@ -80,7 +83,7 @@ export interface BonusRatioSuggestion {
 export interface CompanyStrategy {
   id: string;
   strategyType: 'brand' | 'province' | 'growth' | 'other'; // 策略类型
-  description: string; // 策略描述，如"重点发展Non-CV"、"某省份重点推进解限"、"全国通盘计划增长10%"
+  description: string; // 策略描述，如"重点发展Tier2"、"某省份重点推进准入"、"全国通盘计划增长10%"
   priority: number; // 优先级
   effectivePeriod: string; // 生效周期，如"2024-Q1"
   createdAt: Date;

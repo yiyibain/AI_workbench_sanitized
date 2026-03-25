@@ -202,7 +202,7 @@ export async function readExcelFile(filePath, filterByValue = true) {
             }
             else if (Array.isArray(jsonDataAlt) && jsonDataAlt.length > 0) {
                 // 如果备用方法有数据，说明文件格式可能不同，需要特殊处理
-                throw new Error('Excel文件格式异常，请确保文件是标准的Excel格式且第一行包含列名。');
+                throw new Error('Excel文件格式异常，请确保文件是标准的Excel格式且第一行包含目录准入。');
             }
             throw new Error('Excel文件工作表为空，没有数据行');
         }
@@ -210,29 +210,29 @@ export async function readExcelFile(filePath, filterByValue = true) {
         if (jsonData.length === 1) {
             console.warn('⚠️ Excel文件只有表头行，没有数据行');
         }
-        // 第一行是列名
+        // 第一行是目录准入
         const headers = jsonData[0];
         // 检查表头是否有效
         if (!headers || headers.length === 0) {
-            throw new Error('Excel文件第一行（表头）为空，请确保第一行包含列名');
+            throw new Error('Excel文件第一行（表头）为空，请确保第一行包含目录准入');
         }
         console.log('📝 表头信息:', {
             列数: headers.length,
             前5列: headers.slice(0, 5),
             所有列: headers
         });
-        // 清理和标准化列名
+        // 清理和标准化目录准入
         const cleanedHeaders = headers.map((h, idx) => {
             if (!h || h === '')
                 return `列${idx + 1}`;
             return String(h).trim();
         });
-        console.log('Excel文件列名:', cleanedHeaders);
+        console.log('Excel文件目录准入:', cleanedHeaders);
         // 指标列（需要排除，不作为维度）
         const metricColumns = [
             '金额', '盒', '片', 'pdot', 'value', '市场份额', '销售额',
             'sales', 'market share', '销量', '数量', 'amount', 'quantity',
-            'huiZhiShare', '晖致份额', 'competitorShare', '竞品份额',
+            'companyShare', '某医药公司份额', 'competitorShare', '竞品份额',
             'growthRate', '增长率', 'growth', '增速'
         ];
         // 提取维度列（排除指标列和ID列）
@@ -266,7 +266,7 @@ export async function readExcelFile(filePath, filterByValue = true) {
             const dataPoint = {
                 id: `row-${i}`,
             };
-            // 映射列名到数据点
+            // 映射目录准入到数据点
             cleanedHeaders.forEach((header, colIndex) => {
                 const value = row[colIndex];
                 if (value === undefined || value === null || value === '')

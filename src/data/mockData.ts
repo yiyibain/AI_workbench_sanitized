@@ -2,20 +2,20 @@ import { Product, ProductPerformance, Province, ProvincePerformance, BasicIndica
 
 // 模拟产品数据
 export const mockProducts: Product[] = [
-  { id: 'p1', name: '立普妥', moleculeFormula: '阿托伐他汀', category: '心血管' },
-  { id: 'p2', name: '络活喜', moleculeFormula: '氨氯地平', category: '心血管' },
-  { id: 'p3', name: '西乐葆', moleculeFormula: '塞来昔布', category: '抗炎镇痛' },
-  { id: 'p4', name: '乐瑞卡', moleculeFormula: '普瑞巴林', category: '神经痛' },
-  { id: 'p5', name: '左洛复', moleculeFormula: '舍曲林', category: '精神科' },
-  { id: 'p6', name: '怡诺思', moleculeFormula: '文拉法辛', category: '精神科' },
+  { id: 'p1', name: '产品1', moleculeFormula: '分子式A', category: '核心品类' },
+  { id: 'p2', name: '产品2', moleculeFormula: '分子式C', category: '核心品类' },
+  { id: 'p3', name: '产品3', moleculeFormula: '分子式G', category: '品类A' },
+  { id: 'p4', name: '产品4', moleculeFormula: '分子式D', category: '品类B' },
+  { id: 'p5', name: '产品5', moleculeFormula: '分子式E', category: '品类C' },
+  { id: 'p6', name: '产品6', moleculeFormula: '分子式F', category: '品类C' },
 ];
 
 // 模拟产品表现数据（2024 Q1）
 export const mockProductPerformance: ProductPerformance[] = [
   {
     productId: 'p1',
-    productName: '立普妥',
-    moleculeFormula: '阿托伐他汀',
+    productName: '产品1',
+    moleculeFormula: '分子式A',
     moleculeShare: 35.2,
     moleculeShareChange: 2.1,
     moleculeInternalShare: 28.5,
@@ -23,7 +23,7 @@ export const mockProductPerformance: ProductPerformance[] = [
     competitorShare: 45.8,
     competitorShareChange: 1.5,
     deLimitRate: 78.5,
-    deLimitRateChange: -5.2, // 风险：解限率下降
+    deLimitRateChange: -5.2, // 风险：准入率下降
     period: '2024-Q1',
     previousPeriod: '2023-Q4',
     quarterlyData: [
@@ -35,8 +35,8 @@ export const mockProductPerformance: ProductPerformance[] = [
   },
   {
     productId: 'p2',
-    productName: '络活喜',
-    moleculeFormula: '氨氯地平',
+    productName: '产品2',
+    moleculeFormula: '分子式C',
     moleculeShare: 42.3,
     moleculeShareChange: 1.8,
     moleculeInternalShare: 38.9,
@@ -56,8 +56,8 @@ export const mockProductPerformance: ProductPerformance[] = [
   },
   {
     productId: 'p3',
-    productName: '西乐葆',
-    moleculeFormula: '塞来昔布',
+    productName: '产品3',
+    moleculeFormula: '分子式G',
     moleculeShare: 32.5,
     moleculeShareChange: 1.2,
     moleculeInternalShare: 28.8,
@@ -77,8 +77,8 @@ export const mockProductPerformance: ProductPerformance[] = [
   },
   {
     productId: 'p4',
-    productName: '乐瑞卡',
-    moleculeFormula: '普瑞巴林',
+    productName: '产品4',
+    moleculeFormula: '分子式D',
     moleculeShare: 25.8,
     moleculeShareChange: 2.5,
     moleculeInternalShare: 22.3,
@@ -98,8 +98,8 @@ export const mockProductPerformance: ProductPerformance[] = [
   },
   {
     productId: 'p5',
-    productName: '左洛复',
-    moleculeFormula: '舍曲林',
+    productName: '产品5',
+    moleculeFormula: '分子式E',
     moleculeShare: 18.5,
     moleculeShareChange: -1.2,
     moleculeInternalShare: 15.2,
@@ -119,8 +119,8 @@ export const mockProductPerformance: ProductPerformance[] = [
   },
   {
     productId: 'p6',
-    productName: '怡诺思',
-    moleculeFormula: '文拉法辛',
+    productName: '产品6',
+    moleculeFormula: '分子式F',
     moleculeShare: 22.3,
     moleculeShareChange: 0.8,
     moleculeInternalShare: 18.5,
@@ -278,19 +278,19 @@ export const mockProvincePerformance: ProvincePerformance[] = [
   },
 ];
 
-// 基础指标数据（以立普妥为例）
+// 基础指标数据（以产品1为例）
 const mockBasicIndicators: BasicIndicators[] = [
   {
     productId: 'p1',
-    productName: '立普妥',
+    productName: '产品1',
     quarterlyData: [
       {
         period: '2023-Q2',
-        statinShare: 9.8, // 立普妥占他汀份额
-        coreHospitalPenetration: 9.5, // 核心影响型医院渗透率
+        statinShare: 9.8, // 产品1占相关分子式份额
+        coreHospitalPenetration: 9.5, // 渠道1份额
         stableDistributionRate: 58.2, // 稳定分销率
-        weightedDeLimitRate: 19.5, // 加权解限率
-        targetHospitalPenetration: 9.2, // 目标影响型医院渗透率
+        weightedDeLimitRate: 19.5, // 渠道3覆盖率
+        targetHospitalPenetration: 9.2, // 核心渠道份额
       },
       {
         period: '2023-Q3',
@@ -320,7 +320,7 @@ const mockBasicIndicators: BasicIndicators[] = [
   },
   {
     productId: 'p2',
-    productName: '络活喜',
+    productName: '产品2',
     quarterlyData: [
       {
         period: '2023-Q2',
@@ -358,7 +358,7 @@ const mockBasicIndicators: BasicIndicators[] = [
   },
   {
     productId: 'p3',
-    productName: '西乐葆',
+    productName: '产品3',
     quarterlyData: [
       {
         period: '2023-Q2',
@@ -396,7 +396,7 @@ const mockBasicIndicators: BasicIndicators[] = [
   },
   {
     productId: 'p4',
-    productName: '乐瑞卡',
+    productName: '产品4',
     quarterlyData: [
       {
         period: '2023-Q2',
@@ -434,7 +434,7 @@ const mockBasicIndicators: BasicIndicators[] = [
   },
   {
     productId: 'p5',
-    productName: '左洛复',
+    productName: '产品5',
     quarterlyData: [
       {
         period: '2023-Q2',
@@ -472,7 +472,7 @@ const mockBasicIndicators: BasicIndicators[] = [
   },
   {
     productId: 'p6',
-    productName: '怡诺思',
+    productName: '产品6',
     quarterlyData: [
       {
         period: '2023-Q2',
@@ -514,7 +514,7 @@ const mockBasicIndicators: BasicIndicators[] = [
 export function getBasicIndicators(productId: string): BasicIndicators {
   const indicators = mockBasicIndicators.find(ind => ind.productId === productId);
   if (!indicators) {
-    // 如果找不到，返回默认数据（立普妥的数据）
+    // 如果找不到，返回默认数据（产品1的数据）
     return mockBasicIndicators[0];
   }
   return indicators;

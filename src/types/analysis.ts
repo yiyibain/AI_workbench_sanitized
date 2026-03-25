@@ -15,7 +15,7 @@ export interface HospitalPerformance {
   salesVolumeChange: number; // 销量变化
   marketShare: number; // 市场份额
   marketShareChange: number; // 市场份额变化
-  deLimitStatus: boolean; // 是否解限
+  deLimitStatus: boolean; // 是否准入
   penetrationRate: number; // 渗透率
   penetrationRateChange: number; // 渗透率变化
   period: string;
@@ -28,7 +28,7 @@ export interface ProvinceDetailPerformance extends ProvincePerformance {
   highPotentialHospitalCount: number;
   coreHospitalAvgPenetration: number;
   highPotentialHospitalAvgPenetration: number;
-  deLimitRateChange?: number; // 解限率变化（可选，用于计算）
+  deLimitRateChange?: number; // 准入率变化（可选，用于计算）
   marketShareChange?: number; // 市场份额变化（可选，用于计算）
 }
 

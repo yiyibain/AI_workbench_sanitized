@@ -12,7 +12,7 @@ export default function Chatbot() {
     {
       id: '1',
       role: 'assistant',
-      content: '你好！我是晖致公司的AI业务顾问。我可以帮助你改进分析报告、回答业务问题、提供策略建议。有什么我可以帮助你的吗？',
+      content: '你好！我是某医药公司的AI业务顾问。我可以帮助你改进分析报告、回答业务问题、提供策略建议。有什么我可以帮助你的吗？',
       timestamp: new Date(),
     },
   ]);
@@ -129,7 +129,7 @@ export default function Chatbot() {
       const shouldRefresh = refreshKeywords.some(keyword => userMessageLower.includes(keyword));
 
       if (shouldRefresh && currentAnalysis) {
-        // 从dataSummary中提取周期信息，格式如"产品立普妥在2024-Q1的表现分析"
+        // 从dataSummary中提取周期信息，格式如"产品产品1在2024-Q1的表现分析"
         const periodMatch = currentAnalysis.dataSummary.match(/(\d{4}-Q\d)/);
         const period = periodMatch ? periodMatch[1] : '';
         
@@ -206,7 +206,7 @@ export default function Chatbot() {
           </div>
           <div>
             <div className="font-semibold text-gray-900">AI业务顾问</div>
-            <div className="text-xs text-gray-500">晖致策略规划助手</div>
+            <div className="text-xs text-gray-500">某医药公司策略规划助手</div>
           </div>
         </div>
         <div className="flex items-center space-x-2">

@@ -161,14 +161,14 @@ export default function StrategyAnalysisFlow({ opportunity, onComplete }: Strate
       // 使用第一个策略目标作为标题
       const firstGoal = result.step5.strategyGoals[0].goal;
       // 简化标题，提取关键信息
-      if (firstGoal.includes('立普妥')) {
+      if (firstGoal.includes('产品1')) {
         // 尝试提取更具体的描述
-        if (firstGoal.includes('10mg') && firstGoal.includes('零售')) {
-          return '提升立普妥10mg零售份额';
+        if (firstGoal.includes('低剂量') && firstGoal.includes('零售')) {
+          return '提升产品1低剂量零售份额';
         } else if (firstGoal.includes('零售')) {
-          return '提升立普妥零售份额';
+          return '提升产品1零售份额';
         } else if (firstGoal.includes('医院')) {
-          return '提升立普妥医院份额';
+          return '提升产品1医院份额';
         }
       }
       // 如果包含其他关键词，提取前30个字符作为标题

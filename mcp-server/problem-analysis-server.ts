@@ -44,7 +44,7 @@ const tools = [
         },
         selectedBrand: { 
           type: 'string', 
-          description: '要分析的品牌名称（如"立普妥"）' 
+          description: '要分析的品牌名称（如"产品1"）' 
         },
         maxItems: { 
           type: 'number', 
@@ -109,7 +109,7 @@ const tools = [
         },
         args: { 
           type: 'object', 
-          description: '查询参数，根据functionName不同而不同。例如：{dosage: "10mg", brand: "立普妥"} 或 {brand: "立普妥", dosage: "20mg"}'
+          description: '查询参数，根据functionName不同而不同。例如：{dosage: "低剂量", brand: "产品1"} 或 {brand: "产品1", dosage: "高剂量"}'
         },
         selectedBrand: { 
           type: 'string', 

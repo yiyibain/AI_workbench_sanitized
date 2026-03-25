@@ -1,25 +1,15 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { MarketDataPoint, DimensionConfig } from '../../types/strategy';
-import { dimensionOptions } from '../../data/strategyMockData';
+import { dimensionOptions, mockDimensionConfigs, mockMarketData } from '../../data/strategyMockData';
 import { Filter, AlertCircle, Loader2, Sparkles } from 'lucide-react';
 import { clsx } from 'clsx';
-import { readExcelFile } from '../../services/excelService';
 import MekkoChart from './MekkoChart';
 import { analyzeScissorsGaps, analyzeProblemsAndStrategies } from '../../services/problemAnalysisService';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-// 全局缓存，避免重复加载
-let excelDataCache: {
-  data: MarketDataPoint[];
-  dimensionConfigs: DimensionConfig[];
-  timestamp: number;
-} | null = null;
-
-const CACHE_DURATION = 30 * 60 * 1000; // 缓存30分钟（延长缓存时间）
-
 export default function MarketOverview() {
-  const [selectedBrand, setSelectedBrand] = useState<string>('立普妥');
+  const [selectedBrand, setSelectedBrand] = useState<string>('产品1');
   const [selectedYear, setSelectedYear] = useState<string>('2024'); // 年份筛选，写死2024
   const [filters, setFilters] = useState<{
     province?: string[];
@@ -28,11 +18,11 @@ export default function MarketOverview() {
   
   // 从数据中提取维度配置
   const [availableDimensions, setAvailableDimensions] = useState<DimensionConfig[]>([]);
-  const [selectedXAxisKey, setSelectedXAxisKey] = useState<string>('dimension1');
-  const [selectedYAxisKey, setSelectedYAxisKey] = useState<string>('dimension2');
+  const [selectedXAxisKey, setSelectedXAxisKey] = useState<string>('A');
+  const [selectedYAxisKey, setSelectedYAxisKey] = useState<string>('B');
   const [marketData, setMarketData] = useState<MarketDataPoint[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const isLoadingRef = useRef<boolean>(false); // 防止重复加载
+  const isLoadingRef = useRef<boolean>(false);
   
   // 获取维度值的辅助函数 - 使用useCallback避免每次渲染都重新创建
   const getDimensionValue = useCallback((point: MarketDataPoint, dimensionKey: string): string => {
@@ -76,159 +66,17 @@ export default function MarketOverview() {
   }, [marketData, availableDimensions]);
   
   useEffect(() => {
-    // 读取Excel文件 - Mekko图使用 dataset.xlsx 作为数据源
-    const loadExcelData = async () => {
-      // 防止重复加载
-      if (isLoadingRef.current) {
-        console.log('⏸️ Excel文件正在加载中，跳过重复请求');
-        return;
-      }
-
-      // 检查缓存
-      const now = new Date().getTime();
-      if (excelDataCache && (now - excelDataCache.timestamp) < CACHE_DURATION) {
-        console.log('✅ 使用缓存的Excel数据');
-        setMarketData(excelDataCache.data);
-        const filteredDimensions = excelDataCache.dimensionConfigs.filter(
-          (dim) => !dim.label.endsWith('_英文')
-        );
-        setAvailableDimensions(filteredDimensions);
-        
-        // 设置默认维度
-        const moleculeDim = filteredDimensions.find(d => {
-          const label = d.label.toLowerCase();
-          return label.includes('活性成分') || label.includes('分子') || 
-                 label.includes('molecule') || label.includes('通用名') ||
-                 label.includes('活性') || label.includes('成分');
-        });
-        const productDim = filteredDimensions.find(d => {
-          const label = d.label.toLowerCase();
-          return label.includes('商品名') || label.includes('商品') || 
-                 label.includes('产品名') || label.includes('产品') ||
-                 label.includes('product') || label.includes('商品名称');
-        });
-        
-        if (moleculeDim && productDim) {
-          setSelectedXAxisKey(moleculeDim.key);
-          setSelectedYAxisKey(productDim.key);
-        } else if (filteredDimensions.length > 0) {
-          setSelectedXAxisKey(filteredDimensions[0].key);
-          if (filteredDimensions.length > 1) {
-            setSelectedYAxisKey(filteredDimensions[1].key);
-          }
-        }
-        
-        setLoading(false);
-        return;
-      }
-
-      try {
-        isLoadingRef.current = true;
-        setLoading(true);
-        
-        // 不使用时间戳，使用缓存机制
-        const excelPath = `/dataset.xlsx`;
-        
-        console.log('📥 开始加载Excel文件:', excelPath);
-        const result = await readExcelFile(excelPath);
-        
-        // 保存到缓存
-        excelDataCache = {
-          data: result.data,
-          dimensionConfigs: result.dimensionConfigs,
-          timestamp: new Date().getTime()
-        };
-        
-        setMarketData(result.data);
-        // 过滤掉以"_英文"结尾的维度
-        const filteredDimensions = result.dimensionConfigs.filter(
-          (dim) => !dim.label.endsWith('_英文')
-        );
-        setAvailableDimensions(filteredDimensions);
-        
-        console.log('✅ Excel数据加载成功并已缓存');
-        
-        // console.log('📊 所有可用维度:', filteredDimensions.map(d => `${d.label} (${d.key})`));
-        
-        // 智能设置默认的横纵轴：只使用"活性成分"和"商品名"
-        let defaultXAxisKey: string | null = null;
-        let defaultYAxisKey: string | null = null;
-        
-        // 查找活性成分维度（可能是：活性成分、分子、molecule、通用名等）
-        const moleculeDim = filteredDimensions.find(d => {
-          const label = d.label.toLowerCase();
-          return label.includes('活性成分') || label.includes('分子') || 
-                 label.includes('molecule') || label.includes('通用名') ||
-                 label.includes('活性') || label.includes('成分');
-        });
-        
-        // 查找商品名维度（可能是：商品名、商品、产品名、产品等）
-        const productDim = filteredDimensions.find(d => {
-          const label = d.label.toLowerCase();
-          return label.includes('商品名') || label.includes('商品') || 
-                 label.includes('产品名') || label.includes('产品') ||
-                 label.includes('product') || label.includes('商品名称');
-        });
-        
-        // 如果找到了活性成分和商品名，使用它们（活性成分作为X轴，商品名作为Y轴）
-        if (moleculeDim && productDim) {
-          defaultXAxisKey = moleculeDim.key;
-          defaultYAxisKey = productDim.key;
-          // console.log('✅ 找到活性成分和商品名维度:', {
-          //   xAxis: moleculeDim.label,
-          //   yAxis: productDim.label
-          // });
-        } else {
-          // 如果找不到，使用默认逻辑（前两个可用维度）
-          if (filteredDimensions.length > 0) {
-            defaultXAxisKey = filteredDimensions[0].key;
-            if (filteredDimensions.length > 1) {
-              defaultYAxisKey = filteredDimensions[1].key;
-            }
-          }
-          // console.log('⚠️ 未找到活性成分或商品名，使用默认维度:', {
-          //   xAxis: filteredDimensions[0]?.label || '未设置',
-          //   yAxis: filteredDimensions[1]?.label || '未设置'
-          // });
-        }
-        
-        // 验证当前选择的维度是否仍然存在，如果不存在则重置
-        const currentXAxisExists = filteredDimensions.some(d => d.key === selectedXAxisKey);
-        const currentYAxisExists = filteredDimensions.some(d => d.key === selectedYAxisKey);
-        
-        // 设置X轴：优先使用新计算的默认值，如果当前选择的维度不存在则重置
-        if (defaultXAxisKey) {
-          setSelectedXAxisKey(defaultXAxisKey);
-        } else if (!currentXAxisExists && filteredDimensions.length > 0) {
-          // 如果当前X轴不存在且没有默认值，使用第一个可用维度
-          setSelectedXAxisKey(filteredDimensions[0].key);
-        }
-        
-        // 设置Y轴：优先使用新计算的默认值，如果当前选择的维度不存在则重置
-        if (defaultYAxisKey) {
-          setSelectedYAxisKey(defaultYAxisKey);
-        } else if (!currentYAxisExists && filteredDimensions.length > 1) {
-          // 如果当前Y轴不存在且没有默认值，使用第二个可用维度
-          setSelectedYAxisKey(filteredDimensions[1].key);
-        }
-        
-        // console.log('🎯 最终选择的维度:', {
-        //   xAxis: defaultXAxisKey ? filteredDimensions.find(d => d.key === defaultXAxisKey)?.label : 
-        //          (currentXAxisExists ? filteredDimensions.find(d => d.key === selectedXAxisKey)?.label : '未设置'),
-        //   yAxis: defaultYAxisKey ? filteredDimensions.find(d => d.key === defaultYAxisKey)?.label : 
-        //          (currentYAxisExists ? filteredDimensions.find(d => d.key === selectedYAxisKey)?.label : '未设置'),
-        // });
-      } catch (error) {
-        console.error('❌ 加载Excel数据失败:', error);
-        setMarketData([]);
-        setAvailableDimensions([]);
-      } finally {
-        setLoading(false);
-        isLoadingRef.current = false;
-      }
-    };
-    
-    loadExcelData();
+    if (isLoadingRef.current) {
+      return;
+    }
+    isLoadingRef.current = true;
+    setLoading(true);
+    setMarketData(mockMarketData);
+    setAvailableDimensions(mockDimensionConfigs as unknown as DimensionConfig[]);
+    setSelectedXAxisKey('A');
+    setSelectedYAxisKey('B');
+    setLoading(false);
+    isLoadingRef.current = false;
   }, []);
   
   // 处理渠道筛选变化
@@ -459,7 +307,7 @@ export default function MarketOverview() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600">未能加载数据，请检查 dataset.xlsx 文件</p>
+          <p className="text-gray-600">未能加载数据，请检查 mock data 配置</p>
         </div>
       </div>
     );
@@ -766,6 +614,26 @@ function ProblemIdentification({
     setEditingCauses(true);
 
     try {
+      const analyzeWithTimeout = async (
+        gapItem: { title: string; phenomenon: string; possibleReasons?: string },
+        timeoutMs: number = 60000
+      ) => {
+        const timeoutPromise = new Promise<never>((_, reject) => {
+          setTimeout(() => reject(new Error(`分析超时（>${timeoutMs / 1000}s）`)), timeoutMs);
+        });
+        return Promise.race([
+          analyzeProblemsAndStrategies(
+            [gapItem], // 只传入当前这一个问题
+            selectedBrand,
+            marketData,
+            availableDimensions,
+            undefined, // userFeedback
+            1 // maxProblems，每次只分析1个
+          ),
+          timeoutPromise,
+        ]);
+      };
+
       // 逐个问题处理，实时更新UI
       const problemsToAnalyze = aiScissorsGaps.slice(0, 5);
       
@@ -774,27 +642,24 @@ function ProblemIdentification({
         setProgressMessage(`正在分析第 ${i + 1}/${problemsToAnalyze.length} 个问题: ${gap.title}...`);
 
         try {
-          // 每次只分析一个问题
-          const problemsResult = await analyzeProblemsAndStrategies(
-            [gap], // 只传入当前这一个问题
-            selectedBrand,
-            marketData,
-            availableDimensions,
-            undefined, // userFeedback
-            1 // maxProblems，每次只分析1个
-          );
+          // 每次只分析一个问题（带超时保护，避免卡住）
+          const problemsResult = await analyzeWithTimeout(gap);
           
           // 实时更新UI：将新分析的结果添加到现有结果中
           if (problemsResult.causes.length > 0) {
             setAiCauses(prev => [...prev, problemsResult.causes[0]]);
+          } else {
+            setAiCauses(prev => [...prev, {
+              problem: gap.title,
+              statement: '未返回有效分析结果，请稍后重试或减少问题数量后重试。',
+            }]);
           }
         } catch (error) {
           console.error(`分析问题 ${i + 1} 失败:`, error);
           // 即使某个问题失败，也继续处理下一个
-          // 可以选择添加一个错误标记的条目
           setAiCauses(prev => [...prev, {
             problem: gap.title,
-            statement: '分析失败，请稍后重试'
+            statement: '该问题分析超时或失败，已自动跳过并继续后续问题。'
           }]);
         }
       }

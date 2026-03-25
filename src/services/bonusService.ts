@@ -48,13 +48,13 @@ function generateMockAIResponse(messages: DeepSeekMessage[]): string {
 
 **核心原则：**
 1. **激励与公平并重**：奖金设计应能有效激励各省份进行科学规划，同时保证不同省份、不同品牌间的公平性
-2. **结果与过程并重**：既要关注结果指标（如销量增长率），也要重视过程指标（如解限率、渗透率），确保长期可持续发展
+2. **结果与过程并重**：既要关注结果指标（如销量增长率），也要重视过程指标（如准入率、渗透率），确保长期可持续发展
 3. **存量与增量并重**：建议存量维护与增量拓展的奖金比例约为 4:6，既保证现有市场稳定，又激励新市场开拓
 
 **具体建议：**
-- **存量 vs. 增量比例**：建议存量占40%，增量占60%。存量部分主要考核市场份额维护、解限率保持等；增量部分主要考核销量增长、新市场渗透等
+- **存量 vs. 增量比例**：建议存量占40%，增量占60%。存量部分主要考核市场份额维护、准入率保持等；增量部分主要考核销量增长、新市场渗透等
 - **结果指标 vs. 过程指标**：建议结果指标占60%，过程指标占40%。过程指标是结果指标的基础，需要给予足够重视
-- **品牌差异化**：根据品牌战略重要性（如Non-CV重点品牌）和增长潜力，给予不同的奖金系数权重
+- **品牌差异化**：根据品牌战略重要性（如Tier2重点品牌）和增长潜力，给予不同的奖金系数权重
 
 **公平性考虑：**
 - 考虑不同省份的基础条件差异，设置基础系数和增长系数
@@ -74,7 +74,7 @@ function generateMockAIResponse(messages: DeepSeekMessage[]): string {
 export async function getBonusDesignSuggestion(
   userRequirements: string
 ): Promise<BonusDesignSuggestion> {
-  const systemPrompt = `你是一个专业的医药行业奖金方案设计顾问，专注于晖致公司的奖金激励体系设计。
+  const systemPrompt = `你是一个专业的医药行业奖金方案设计顾问，专注于某医药公司的奖金激励体系设计。
 你需要基于"最大化激励"、"公平性"和"科学性"三个核心原则，提供专业的奖金方案设计建议。
 请提供结构化的建议，包括设计原则、具体建议、公平性考虑和科学依据。`;
 
@@ -123,7 +123,7 @@ function parseBonusDesignSuggestion(response: string): BonusDesignSuggestion {
     recommendations.push({
       category: '存量 vs. 增量比例',
       suggestion: `存量占${ratioMatch[1]}%，增量占${ratioMatch[2]}%`,
-      rationale: '存量部分主要考核市场份额维护、解限率保持等；增量部分主要考核销量增长、新市场渗透等',
+      rationale: '存量部分主要考核市场份额维护、准入率保持等；增量部分主要考核销量增长、新市场渗透等',
     });
   }
 
@@ -168,7 +168,7 @@ function parseBonusDesignSuggestion(response: string): BonusDesignSuggestion {
       {
         category: '存量 vs. 增量比例',
         suggestion: '存量占40%，增量占60%',
-        rationale: '存量部分主要考核市场份额维护、解限率保持等；增量部分主要考核销量增长、新市场渗透等',
+        rationale: '存量部分主要考核市场份额维护、准入率保持等；增量部分主要考核销量增长、新市场渗透等',
       },
     ],
     fairnessConsiderations: fairnessConsiderations.length > 0 ? fairnessConsiderations : [
@@ -188,7 +188,7 @@ export async function getBonusRatioSuggestions(
   strategies: CompanyStrategy[],
   indicators: BrandIndicator[]
 ): Promise<BonusRatioSuggestion[]> {
-  const systemPrompt = `你是一个专业的医药行业奖金方案设计顾问，专注于晖致公司的奖金激励体系设计。
+  const systemPrompt = `你是一个专业的医药行业奖金方案设计顾问，专注于某医药公司的奖金激励体系设计。
 你需要基于公司策略和品牌指标，为各品牌的指标细项提供合理的奖金比例建议。
 请考虑品牌战略重要性、增长目标难度、当前完成度等因素，提供0-1之间的奖金系数建议。`;
 
@@ -212,9 +212,9 @@ ${indicatorsText}
 4. 考虑因素及其影响
 
 请特别关注：
-- Non-CV品牌作为重点发展品牌，应给予较高奖金系数
+- Tier2品牌作为重点发展品牌，应给予较高奖金系数
 - 增长目标较高的品牌，应给予更高激励
-- 过程指标（如解限率）对结果指标有重要影响，需要给予适当权重`;
+- 过程指标（如准入率）对结果指标有重要影响，需要给予适当权重`;
 
   const response = await callDeepSeekAPI([
     { role: 'system', content: systemPrompt },
@@ -239,10 +239,10 @@ function parseBonusRatioSuggestions(
     let baseRatio = 0.15; // 默认系数
 
     // 根据品牌类别调整
-    if (indicator.category === 'Non-CV') {
-      const nonCVStrategy = strategies.find(s => s.description.includes('Non-CV'));
-      if (nonCVStrategy) {
-        baseRatio += 0.1; // Non-CV品牌增加0.1
+    if (indicator.category === 'Tier2') {
+      const nonTier1Strategy = strategies.find(s => s.description.includes('Tier2'));
+      if (nonTier1Strategy) {
+        baseRatio += 0.1; // Tier2品牌增加0.1
       }
     }
 
@@ -269,9 +269,9 @@ function parseBonusRatioSuggestions(
     let rationale = '';
     const factors: Array<{ factor: string; impact: 'positive' | 'negative' | 'neutral'; weight: number }> = [];
 
-    if (indicator.category === 'Non-CV') {
-      rationale += '作为Non-CV重点品牌，';
-      factors.push({ factor: '战略重要性（Non-CV）', impact: 'positive', weight: 0.4 });
+    if (indicator.category === 'Tier2') {
+      rationale += '作为Tier2重点品牌，';
+      factors.push({ factor: '战略重要性（Tier2）', impact: 'positive', weight: 0.4 });
     }
 
     if (indicator.indicatorType === 'result') {
@@ -346,9 +346,9 @@ export async function understandStrategyAndAdjust(
   const systemPrompt = `你是一个专业的医药行业奖金方案优化顾问。你需要理解用户的策略性指令，并生成具体的奖金包调整方案。
 
 用户可能输入的指令类型包括：
-1. 品牌策略：如"发展Non-CV产品"、"重点支持CV品牌"、"提升疼痛品牌"
-2. 指标策略：如"结果指标给多一点"、"过程指标增加权重"、"提高解限率指标"
-3. 组合策略：如"发展Non-CV产品，结果指标给多一点"
+1. 品牌策略：如"发展Tier2产品"、"重点支持Tier1品牌"、"提升产品组A"
+2. 指标策略：如"结果指标给多一点"、"过程指标增加权重"、"提高渠道覆盖率指标"
+3. 组合策略：如"发展Tier2产品，结果指标给多一点"
 
 你需要：
 1. 理解用户的策略意图
@@ -361,20 +361,20 @@ export async function understandStrategyAndAdjust(
   "adjustments": [
     {
       "brandId": "brand-3",
-      "brandName": "疼痛",
-      "subBrandName": "西乐葆",
+      "brandName": "产品组A",
+      "subBrandName": "产品3",
       "totalRatioChange": 2,
       "indicatorAdjustments": [
         {
           "indicatorId": "ind-pain-result-1",
-          "indicatorName": "医院PDOT份额(塞来昔布/普瑞巴林)",
+          "indicatorName": "医院PDOT份额(分子式G/分子式D)",
           "type": "result",
           "ratioChange": 1
         }
       ]
     }
   ],
-  "explanation": "根据'发展Non-CV产品，结果指标给多一点'的策略，增加了疼痛品牌（特别是西乐葆）的总奖金包，并提高了结果指标的权重。",
+  "explanation": "根据'发展Tier2产品，结果指标给多一点'的策略，增加了产品组A品牌（特别是产品3）的总奖金包，并提高了结果指标的权重。",
   "totalRatioAfter": 100
 }`;
 
@@ -435,22 +435,22 @@ function generateRuleBasedAdjustment(
   let explanation = '';
   const lowerInstruction = userInstruction.toLowerCase();
 
-  // 识别Non-CV品牌
-  const nonCVBrands = ['疼痛', '精神', '爱宁达', '利加隆', '维固力', '迪敏思'];
-  // const cvBrands = ['立普妥', '络活喜', '可多华']; // 保留用于未来扩展
+  // 识别Tier2品牌
+  const nonTier1Brands = ['产品组A', '产品组B', '产品8', '产品9', '产品10', '迪敏思'];
+  // const cvBrands = ['产品1', '产品2', '产品7']; // 保留用于未来扩展
 
-  // 策略1: 发展Non-CV产品
-  if (lowerInstruction.includes('non-cv') || lowerInstruction.includes('非cv') || 
+  // 策略1: 发展Tier2产品
+  if (lowerInstruction.includes('tier2') || lowerInstruction.includes('tier 2') || lowerInstruction.includes('二线') || 
       lowerInstruction.includes('发展') && (lowerInstruction.includes('非') || lowerInstruction.includes('non'))) {
-    explanation = '根据"发展Non-CV产品"的策略，增加Non-CV品牌的总奖金包比例。';
+    explanation = '根据"发展Tier2产品"的策略，增加Tier2品牌的总奖金包比例。';
     
     currentPackages.forEach((pkg) => {
-      const isNonCV = nonCVBrands.some(brand => pkg.brandName.includes(brand));
-      if (isNonCV) {
+      const isNonTier1 = nonTier1Brands.some(brand => pkg.brandName.includes(brand));
+      if (isNonTier1) {
         if (pkg.subBrandPackages) {
           pkg.subBrandPackages.forEach((sub: any) => {
-            const isNonCVSub = nonCVBrands.some(brand => sub.subBrandName.includes(brand));
-            if (isNonCVSub) {
+            const isNonTier1Sub = nonTier1Brands.some(brand => sub.subBrandName.includes(brand));
+            if (isNonTier1Sub) {
               adjustments.push({
                 brandId: pkg.brandId,
                 brandName: pkg.brandName,
@@ -467,7 +467,7 @@ function generateRuleBasedAdjustment(
           });
         }
       } else {
-        // 减少CV品牌的比例
+        // 减少Tier1品牌的比例
         if (pkg.subBrandPackages) {
           pkg.subBrandPackages.forEach((sub: any) => {
             adjustments.push({

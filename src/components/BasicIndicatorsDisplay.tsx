@@ -83,10 +83,10 @@ export default function BasicIndicatorsDisplay({ indicators, product }: BasicInd
     
     return {
       period: q.period,
-      核心影响型医院渗透率: q.coreHospitalPenetration,
+      渠道1份额: q.coreHospitalPenetration,
       稳定分销率: q.stableDistributionRate,
-      加权解限率: q.weightedDeLimitRate,
-      目标影响型医院渗透率: q.targetHospitalPenetration,
+      渠道3覆盖率: q.weightedDeLimitRate,
+      核心渠道份额: q.targetHospitalPenetration,
       // 变化量
       coreChange: q.coreHospitalPenetration - prevCore,
       stableChange: q.stableDistributionRate - prevStable,
@@ -382,7 +382,7 @@ export default function BasicIndicatorsDisplay({ indicators, product }: BasicInd
           {/* 结果指标概览卡片 */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-              <div className="text-xs text-blue-600 mb-1">立普妥占他汀份额</div>
+              <div className="text-xs text-blue-600 mb-1">产品1占相关分子式份额</div>
               <div className="text-2xl font-bold text-blue-900 mb-2">
                 {resultStats.latest.toFixed(1)}%
               </div>
@@ -421,7 +421,7 @@ export default function BasicIndicatorsDisplay({ indicators, product }: BasicInd
 
           {/* 结果指标趋势图 */}
           <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">立普妥占他汀份额趋势</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">产品1占相关分子式份额趋势</h3>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={resultIndicatorData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -437,7 +437,7 @@ export default function BasicIndicatorsDisplay({ indicators, product }: BasicInd
                   dataKey="value" 
                   stroke="#3b82f6" 
                   strokeWidth={2}
-                  name="立普妥占他汀份额"
+                  name="产品1占相关分子式份额"
                   dot={{ r: 5 }}
                   activeDot={{ r: 7 }}
                 />
@@ -502,10 +502,10 @@ export default function BasicIndicatorsDisplay({ indicators, product }: BasicInd
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               { 
-                name: '核心影响型医院渗透率', 
+                name: '渠道1份额', 
                 key: 'coreHospitalPenetration' as const,
                 baseline: 10,
-                latest: processIndicatorsData[processIndicatorsData.length - 1].核心影响型医院渗透率,
+                latest: processIndicatorsData[processIndicatorsData.length - 1].渠道1份额,
                 change: processIndicatorsData[processIndicatorsData.length - 1].coreChange,
               },
               { 
@@ -516,17 +516,17 @@ export default function BasicIndicatorsDisplay({ indicators, product }: BasicInd
                 change: processIndicatorsData[processIndicatorsData.length - 1].stableChange,
               },
               { 
-                name: '加权解限率', 
+                name: '渠道3覆盖率', 
                 key: 'weightedDeLimitRate' as const,
                 baseline: 20,
-                latest: processIndicatorsData[processIndicatorsData.length - 1].加权解限率,
+                latest: processIndicatorsData[processIndicatorsData.length - 1].渠道3覆盖率,
                 change: processIndicatorsData[processIndicatorsData.length - 1].weightedChange,
               },
               { 
-                name: '目标影响型医院渗透率', 
+                name: '核心渠道份额', 
                 key: 'targetHospitalPenetration' as const,
                 baseline: 10,
-                latest: processIndicatorsData[processIndicatorsData.length - 1].目标影响型医院渗透率,
+                latest: processIndicatorsData[processIndicatorsData.length - 1].核心渠道份额,
                 change: processIndicatorsData[processIndicatorsData.length - 1].targetChange,
               },
             ].map((indicator) => (
@@ -563,10 +563,10 @@ export default function BasicIndicatorsDisplay({ indicators, product }: BasicInd
                 <Legend />
                 <Line 
                   type="monotone" 
-                  dataKey="核心影响型医院渗透率" 
+                  dataKey="渠道1份额" 
                   stroke="#8b5cf6" 
                   strokeWidth={2}
-                  name="核心影响型医院渗透率"
+                  name="渠道1份额"
                   dot={{ r: 4 }}
                 />
                 <Line 
@@ -579,18 +579,18 @@ export default function BasicIndicatorsDisplay({ indicators, product }: BasicInd
                 />
                 <Line 
                   type="monotone" 
-                  dataKey="加权解限率" 
+                  dataKey="渠道3覆盖率" 
                   stroke="#f59e0b" 
                   strokeWidth={2}
-                  name="加权解限率"
+                  name="渠道3覆盖率"
                   dot={{ r: 4 }}
                 />
                 <Line 
                   type="monotone" 
-                  dataKey="目标影响型医院渗透率" 
+                  dataKey="核心渠道份额" 
                   stroke="#ec4899" 
                   strokeWidth={2}
-                  name="目标影响型医院渗透率"
+                  name="核心渠道份额"
                   dot={{ r: 4 }}
                 />
               </LineChart>
@@ -605,10 +605,10 @@ export default function BasicIndicatorsDisplay({ indicators, product }: BasicInd
                 <thead>
                   <tr className="border-b border-gray-300">
                     <th className="text-left py-2 px-4 font-semibold text-gray-700">季度</th>
-                    <th className="text-right py-2 px-4 font-semibold text-gray-700">核心影响型医院渗透率</th>
+                    <th className="text-right py-2 px-4 font-semibold text-gray-700">渠道1份额</th>
                     <th className="text-right py-2 px-4 font-semibold text-gray-700">稳定分销率</th>
-                    <th className="text-right py-2 px-4 font-semibold text-gray-700">加权解限率</th>
-                    <th className="text-right py-2 px-4 font-semibold text-gray-700">目标影响型医院渗透率</th>
+                    <th className="text-right py-2 px-4 font-semibold text-gray-700">渠道3覆盖率</th>
+                    <th className="text-right py-2 px-4 font-semibold text-gray-700">核心渠道份额</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -616,16 +616,16 @@ export default function BasicIndicatorsDisplay({ indicators, product }: BasicInd
                     <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
                       <td className="py-2 px-4 text-gray-900">{item.period}</td>
                       <td className="py-2 px-4 text-right font-medium text-gray-900">
-                        {item.核心影响型医院渗透率.toFixed(1)}%
+                        {item.渠道1份额.toFixed(1)}%
                       </td>
                       <td className="py-2 px-4 text-right font-medium text-gray-900">
                         {item.稳定分销率.toFixed(1)}%
                       </td>
                       <td className="py-2 px-4 text-right font-medium text-gray-900">
-                        {item.加权解限率.toFixed(1)}%
+                        {item.渠道3覆盖率.toFixed(1)}%
                       </td>
                       <td className="py-2 px-4 text-right font-medium text-gray-900">
-                        {item.目标影响型医院渗透率.toFixed(1)}%
+                        {item.核心渠道份额.toFixed(1)}%
                       </td>
                     </tr>
                   ))}

@@ -53,7 +53,7 @@ export default function Home() {
               面向CEO和决策层的智能决策平台
             </p>
             <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-              内置晖致"三环"运营体系与产品矩阵知识库，所有AI建议均基于"以患者为中心"和"解限-渗透-做广"的业务逻辑生成
+              内置某医药公司"协同"运营框架与产品矩阵知识库，所有AI建议均基于"以患者需求为导向"和"准入-渗透-扩面"的业务逻辑生成
             </p>
           </div>
         </div>
@@ -117,7 +117,7 @@ export default function Home() {
                 <h3 className="text-xl font-bold text-gray-900">全局 AI 业务大脑</h3>
               </div>
               <p className="text-gray-600">
-                内置晖致"三环"运营体系与产品矩阵知识库，所有AI建议均基于"以患者为中心"和"解限-渗透-做广"的业务逻辑生成。
+                内置某医药公司"协同"运营框架与产品矩阵知识库，所有AI建议均基于"以患者需求为导向"和"准入-渗透-扩面"的业务逻辑生成。
               </p>
             </div>
             <div>

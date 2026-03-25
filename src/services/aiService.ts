@@ -46,11 +46,11 @@ function generateMockAIResponse(messages: DeepSeekMessage[]): string {
   
   if (userMessage.includes('产品表现')) {
     // 从userMessage中提取具体数值
-    const statinShareMatch = userMessage.match(/立普妥占他汀份额：最新值([\d.]+)%/);
-    const corePenetrationMatch = userMessage.match(/核心影响型医院渗透率：最新值([\d.]+)%/);
+    const statinShareMatch = userMessage.match(/产品1占相关分子式份额：最新值([\d.]+)%/);
+    const corePenetrationMatch = userMessage.match(/渠道1份额：最新值([\d.]+)%/);
     const stableRateMatch = userMessage.match(/稳定分销率：最新值([\d.]+)%/);
-    const weightedRateMatch = userMessage.match(/加权解限率：最新值([\d.]+)%/);
-    const targetPenetrationMatch = userMessage.match(/目标影响型医院渗透率：最新值([\d.]+)%/);
+    const weightedRateMatch = userMessage.match(/渠道3覆盖率：最新值([\d.]+)%/);
+    const targetPenetrationMatch = userMessage.match(/核心渠道份额：最新值([\d.]+)%/);
     
     const statinShare = statinShareMatch ? statinShareMatch[1] : 'N/A';
     const corePenetration = corePenetrationMatch ? corePenetrationMatch[1] : 'N/A';
@@ -69,14 +69,14 @@ function generateMockAIResponse(messages: DeepSeekMessage[]): string {
 基于过往4个季度的数据分析，该产品在结果指标和过程指标方面呈现以下特点：
 
 **结果指标表现**：
-- 立普妥占他汀份额最新值为${statinShare}%，${statinShareNum >= 10 ? '达到基准水平' : '低于基准水平（10%左右）'}
+- 产品1占相关分子式份额最新值为${statinShare}%，${statinShareNum >= 10 ? '达到基准水平' : '低于基准水平（10%左右）'}
 - 从趋势看，该指标呈现${statinShareNum >= 10 ? '稳定或上升' : '下降'}趋势
 
 **过程指标表现**：
-- 核心影响型医院渗透率为${corePenetration}%，${corePenetrationNum >= 10 ? '达到基准水平' : '低于基准水平（10%左右）'}
+- 渠道1份额为${corePenetration}%，${corePenetrationNum >= 10 ? '达到基准水平' : '低于基准水平（10%左右）'}
 - 稳定分销率为${stableRate}%，${stableRateNum >= 60 ? '达到基准水平' : '低于基准水平（60%左右）'}
-- 加权解限率为${weightedRate}%，${weightedRateNum >= 20 ? '达到基准水平' : '低于基准水平（20%左右）'}
-- 目标影响型医院渗透率为${targetPenetration}%，${targetPenetrationNum >= 10 ? '达到基准水平' : '低于基准水平（10%左右）'}
+- 渠道3覆盖率为${weightedRate}%，${weightedRateNum >= 20 ? '达到基准水平' : '低于基准水平（20%左右）'}
+- 核心渠道份额为${targetPenetration}%，${targetPenetrationNum >= 10 ? '达到基准水平' : '低于基准水平（10%左右）'}
 
 ## 数据解读
 
@@ -88,7 +88,7 @@ function generateMockAIResponse(messages: DeepSeekMessage[]): string {
 
 建议进一步分析：
 - 分省份拆解数据，识别问题集中区域
-- 访谈重点医院的关键医生，了解处方决策因素
+- 访谈核心渠道终端的关键决策人，了解处方决策因素
 - 对比竞品的市场活动时间线
 - 分析价格变化对市场份额的影响`;
   }
@@ -97,17 +97,17 @@ function generateMockAIResponse(messages: DeepSeekMessage[]): string {
     return `该省份在多个核心维度表现不理想：
 1. 市场份额低于平均水平，可能与竞品在该区域投入较大有关
 2. ROI偏低，说明投入产出效率有待提升
-3. 解限率和渗透率均低于目标值，存在市场开发不足的问题
+3. 渠道覆盖率和渠道份额均低于目标值，存在市场开发不足的问题
 
 可能原因：
 - 区域团队能力建设不足
-- 医院准入进展缓慢
+- 渠道准入进展缓慢
 - 医生教育覆盖不够
 - 竞品在该区域有较强的先发优势
 
 建议行动：
-- 访谈区域经理和重点医院代表，了解具体障碍
-- 分析该省份的医院准入数据
+- 访谈区域经理和核心渠道代表，了解具体障碍
+- 分析该省份的渠道准入数据
 - 评估是否需要增加市场投入或调整策略`;
   }
   
@@ -119,8 +119,8 @@ export async function analyzeProductPerformance(
   product: ProductPerformance,
   indicators?: BasicIndicators
 ): Promise<AIAnalysis> {
-  const systemPrompt = `你是一个专业的医药行业业务分析师，专注于晖致公司的产品表现分析。
-你需要基于"以患者为中心"和"解限-渗透-做广"的业务逻辑进行分析。
+  const systemPrompt = `你是一个专业的医药行业业务分析师，专注于某医药公司的产品表现分析。
+你需要基于"以患者需求为导向"和"准入-渗透-扩面"的业务逻辑进行分析。
 请提供专业、深入的分析，包括数据解读、风险识别和行动建议。
 **重要**：在分析中必须准确引用结果指标和过程指标的具体数值，确保与面板显示的数据完全一致。`;
 
@@ -148,14 +148,14 @@ export async function analyzeProductPerformance(
     indicatorsData = `
 
 结果指标（过往4个季度）：
-- 立普妥占他汀份额：最新值${latest.statinShare.toFixed(1)}% (${resultChange > 0 ? '+' : ''}${resultChange.toFixed(1)}% vs 上季度)，4季度平均值${avgStatinShare.toFixed(1)}%
+- 产品1占相关分子式份额：最新值${latest.statinShare.toFixed(1)}% (${resultChange > 0 ? '+' : ''}${resultChange.toFixed(1)}% vs 上季度)，4季度平均值${avgStatinShare.toFixed(1)}%
 - 历史数据：${indicators.quarterlyData.map(q => `${q.period}: ${q.statinShare.toFixed(1)}%`).join('; ')}
 
 过程指标（过往4个季度）：
-- 核心影响型医院渗透率：最新值${latest.coreHospitalPenetration.toFixed(1)}% (${coreChange > 0 ? '+' : ''}${coreChange.toFixed(1)}% vs 上季度)，4季度平均值${avgCorePenetration.toFixed(1)}%
+- 渠道1份额：最新值${latest.coreHospitalPenetration.toFixed(1)}% (${coreChange > 0 ? '+' : ''}${coreChange.toFixed(1)}% vs 上季度)，4季度平均值${avgCorePenetration.toFixed(1)}%
 - 稳定分销率：最新值${latest.stableDistributionRate.toFixed(1)}% (${stableChange > 0 ? '+' : ''}${stableChange.toFixed(1)}% vs 上季度)，4季度平均值${avgStableRate.toFixed(1)}%
-- 加权解限率：最新值${latest.weightedDeLimitRate.toFixed(1)}% (${weightedChange > 0 ? '+' : ''}${weightedChange.toFixed(1)}% vs 上季度)，4季度平均值${avgWeightedRate.toFixed(1)}%
-- 目标影响型医院渗透率：最新值${latest.targetHospitalPenetration.toFixed(1)}% (${targetChange > 0 ? '+' : ''}${targetChange.toFixed(1)}% vs 上季度)，4季度平均值${avgTargetPenetration.toFixed(1)}%`;
+- 渠道3覆盖率：最新值${latest.weightedDeLimitRate.toFixed(1)}% (${weightedChange > 0 ? '+' : ''}${weightedChange.toFixed(1)}% vs 上季度)，4季度平均值${avgWeightedRate.toFixed(1)}%
+- 核心渠道份额：最新值${latest.targetHospitalPenetration.toFixed(1)}% (${targetChange > 0 ? '+' : ''}${targetChange.toFixed(1)}% vs 上季度)，4季度平均值${avgTargetPenetration.toFixed(1)}%`;
   }
 
   const userPrompt = `请分析以下产品的市场表现数据：
@@ -170,14 +170,14 @@ export async function analyzeProductPerformance(
 - 竞品份额：${product.competitorShare}% (变化：${product.competitorShareChange > 0 ? '+' : ''}${product.competitorShareChange}%)
 
 内部数据：
-- 解限率：${product.deLimitRate}% (变化：${product.deLimitRateChange > 0 ? '+' : ''}${product.deLimitRateChange}%)${indicatorsData}
+- 准入率：${product.deLimitRate}% (变化：${product.deLimitRateChange > 0 ? '+' : ''}${product.deLimitRateChange}%)${indicatorsData}
 
 请提供：
 1. "就数论数"：识别关键变化和风险点，必须准确引用上述结果指标和过程指标的具体数值
 2. "数据解读"：分析可能原因，并提供进一步锁定问题的建议（包括拆解问题角度、可访谈对象等）
-3. 结合晖致"三环"运营体系，提供基于"解限-渗透-做广"逻辑的建议
+3. 结合某医药公司"协同"运营框架，提供基于"准入-渗透-扩面"逻辑的建议
 
-**重要提示**：在分析中必须准确引用结果指标和过程指标的具体数值（如立普妥占他汀份额${indicators?.quarterlyData[indicators.quarterlyData.length - 1]?.statinShare.toFixed(1) || 'N/A'}%、核心影响型医院渗透率${indicators?.quarterlyData[indicators.quarterlyData.length - 1]?.coreHospitalPenetration.toFixed(1) || 'N/A'}%等），确保与面板显示的数据完全一致。`;
+**重要提示**：在分析中必须准确引用结果指标和过程指标的具体数值（如产品1占相关分子式份额${indicators?.quarterlyData[indicators.quarterlyData.length - 1]?.statinShare.toFixed(1) || 'N/A'}%、渠道1份额${indicators?.quarterlyData[indicators.quarterlyData.length - 1]?.coreHospitalPenetration.toFixed(1) || 'N/A'}%等），确保与面板显示的数据完全一致。`;
 
   const response = await callDeepSeekAPI([
     { role: 'system', content: systemPrompt },
@@ -218,8 +218,8 @@ export async function analyzeProductPerformance(
 export async function analyzeProvincePerformance(
   province: ProvincePerformance
 ): Promise<AIAnalysis> {
-  const systemPrompt = `你是一个专业的医药行业业务分析师，专注于晖致公司的区域市场分析。
-你需要基于"以患者为中心"和"解限-渗透-做广"的业务逻辑进行分析。
+  const systemPrompt = `你是一个专业的医药行业业务分析师，专注于某医药公司的区域市场分析。
+你需要基于"以患者需求为导向"和"准入-渗透-扩面"的业务逻辑进行分析。
 请提供专业、深入的分析，包括健康度评估、原因分析和改进建议。`;
 
   const userPrompt = `请分析以下省份的市场表现数据：
@@ -230,10 +230,10 @@ export async function analyzeProvincePerformance(
 核心维度：
 - 市场份额：${province.marketShare}%
 - ROI：${province.roi}
-- 非立络占比：${province.nonLiluRatio}%
+- 非核心产品占比：${province.nonLiluRatio}%
 
 核心指标：
-- 解限率：${province.deLimitRate}%
+- 准入率：${province.deLimitRate}%
 - 渗透率：${province.penetrationRate}%
 
 健康度评分：${province.healthScore}/100 (${province.healthLevel})
@@ -287,7 +287,7 @@ function extractKeyFindings(_response: string, data: any): string[] {
   }
   
   if (data.deLimitRateChange && data.deLimitRateChange < -3) {
-    findings.push(`解限率下降${Math.abs(data.deLimitRateChange)}%，可能影响市场准入`);
+    findings.push(`准入率下降${Math.abs(data.deLimitRateChange)}%，可能影响市场准入`);
   }
   
   if (data.healthScore && data.healthScore < 60) {
@@ -318,9 +318,9 @@ function generateRiskAlerts(product: ProductPerformance) {
       productId: product.productId,
       productName: product.productName,
       riskLevel: 'high' as const,
-      riskType: '解限率下降',
-      description: `解限率下降${Math.abs(product.deLimitRateChange)}%，可能影响市场准入`,
-      indicators: ['解限率'],
+      riskType: '准入率下降',
+      description: `准入率下降${Math.abs(product.deLimitRateChange)}%，可能影响市场准入`,
+      indicators: ['准入率'],
       changeMagnitude: Math.abs(product.deLimitRateChange),
     });
   }
@@ -351,7 +351,7 @@ function generateProvinceRiskAlerts(province: ProvincePerformance) {
       riskLevel: 'high' as const,
       riskType: '健康度评分偏低',
       description: `健康度评分${province.healthScore}分，低于平均水平`,
-      indicators: ['健康度评分', '市场份额', 'ROI', '解限率'],
+      indicators: ['健康度评分', '市场份额', 'ROI', '准入率'],
       changeMagnitude: 60 - province.healthScore,
     });
   }
@@ -361,9 +361,9 @@ function generateProvinceRiskAlerts(province: ProvincePerformance) {
       productId: province.provinceId,
       productName: province.provinceName,
       riskLevel: 'medium' as const,
-      riskType: '解限率偏低',
-      description: `解限率${province.deLimitRate}%，低于目标值`,
-      indicators: ['解限率'],
+      riskType: '准入率偏低',
+      description: `准入率${province.deLimitRate}%，低于目标值`,
+      indicators: ['准入率'],
       changeMagnitude: 70 - province.deLimitRate,
     });
   }
@@ -386,7 +386,7 @@ function extractReasons(response: string): string[] {
     reasons.push('渠道覆盖不足');
   }
   if (response.includes('准入')) {
-    reasons.push('医院准入进展缓慢');
+    reasons.push('渠道准入进展缓慢');
   }
   if (response.includes('团队')) {
     reasons.push('区域团队能力建设不足');
@@ -404,7 +404,7 @@ function extractSuggestedActions(_response: string) { // eslint-disable-line @ty
       '对比竞品表现，找出差距原因',
     ],
     interviewTargets: [
-      '重点医院的关键医生',
+      '核心渠道终端的关键决策人',
       '区域经理和销售代表',
       '市场准入负责人',
     ],
@@ -422,92 +422,92 @@ function generateRelatedInfo(product: ProductPerformance) {
 
   // 根据产品名称生成特定信息
   switch (product.productName) {
-    case '立普妥':
+    case '产品1':
       info.push(
         {
           source: '集采政策',
-          content: `第七批国家集采中，${product.moleculeFormula}类产品纳入集采范围，立普妥作为原研产品面临价格压力`,
-          relevance: '集采可能影响立普妥在集采医院的准入和价格竞争力',
+          content: `第七批国家集采中，${product.moleculeFormula}类产品纳入集采范围，产品1作为原研产品面临价格压力`,
+          relevance: '集采可能影响产品1在相关渠道终端的准入和价格竞争力',
         },
         {
           source: '临床指南',
-          content: '2024年《中国血脂管理指南》更新，强调他汀类药物在心血管一级预防中的重要性',
-          relevance: '指南更新可能提升立普妥在心内科的使用率',
+          content: '2024年《中国目标治疗领域管理指南》更新，强调相关分子式类药物在目标治疗领域一级预防中的重要性',
+          relevance: '指南更新可能提升产品1在渠道分组1的使用率',
         },
         {
           source: '竞品动态',
-          content: '某仿制药企业推出立普妥的仿制版本，价格较原研低40%，在部分省份开始销售',
+          content: '某仿制药企业推出产品1的仿制版本，价格较原研低40%，在部分省份开始销售',
           relevance: '仿制药竞争可能解释分子式内份额下降的原因',
         },
         {
-          source: '医院准入',
-          content: '多家三甲医院完成新一轮药品目录调整，立普妥在部分医院面临停控风险',
-          relevance: '可能解释解限率下降的问题',
+          source: '渠道准入',
+          content: '多家重点渠道终端完成新一轮药品目录调整，产品1在部分医院面临限制开具风险',
+          relevance: '可能解释准入率下降的问题',
         }
       );
       break;
 
-    case '络活喜':
+    case '产品2':
       info.push(
         {
           source: '市场动态',
-          content: '氨氯地平类药物在高血压治疗中地位稳固，但市场竞争加剧，多个新品牌进入市场',
-          relevance: '新品牌进入可能影响络活喜的市场份额',
+          content: '分子式C类药物在高血压治疗中地位稳固，但市场竞争加剧，多个新品牌进入市场',
+          relevance: '新品牌进入可能影响产品2的市场份额',
         },
         {
           source: '学术研究',
-          content: '最新研究显示，氨氯地平在合并糖尿病患者中的心血管保护作用得到进一步证实',
-          relevance: '研究结果可能提升络活喜在相关适应症的使用',
+          content: '最新研究显示，分子式C在合并糖尿病患者中的目标治疗领域保护作用得到进一步证实',
+          relevance: '研究结果可能提升产品2在相关适应症的使用',
         },
         {
           source: '渠道变化',
-          content: '零售渠道中氨氯地平类产品需求增长，但晖致在零售渠道的覆盖相对不足',
+          content: '零售渠道中分子式C类产品需求增长，但某医药公司在零售渠道的覆盖相对不足',
           relevance: '可能影响零售渠道的份额表现',
         }
       );
       break;
 
-    case '西乐葆':
+    case '产品3':
       info.push(
         {
           source: '政策影响',
           content: '国家卫健委发布《抗炎镇痛药物临床应用指导原则》，强调选择性COX-2抑制剂的安全性',
-          relevance: '政策支持可能有利于西乐葆的市场推广',
+          relevance: '政策支持可能有利于产品3的市场推广',
         },
         {
           source: '竞品动态',
-          content: '某竞品公司推出西乐葆的改良剂型，声称胃肠道副作用更低，加大市场推广力度',
-          relevance: '竞品创新可能影响西乐葆的市场地位',
+          content: '某竞品公司推出产品3的改良剂型，声称胃肠道副作用更低，加大市场推广力度',
+          relevance: '竞品创新可能影响产品3的市场地位',
         },
         {
           source: '科室拓展',
-          content: '风湿免疫科对塞来昔布类药物的需求持续增长，但西乐葆在该科室的渗透率仍有提升空间',
+          content: '风湿免疫科对分子式G类药物的需求持续增长，但产品3在该科室的渗透率仍有提升空间',
           relevance: '科室拓展是潜在的增长机会',
         }
       );
       break;
 
-    case '乐瑞卡':
+    case '产品4':
       info.push(
         {
           source: '适应症扩展',
-          content: '普瑞巴林在神经病理性疼痛治疗中的应用指南更新，适应症范围扩大',
+          content: '分子式D在目标症状领域的应用指南更新，适用范围扩大',
           relevance: '适应症扩展可能带来新的市场机会',
         },
         {
           source: '市场准入',
-          content: '多个省份将乐瑞卡纳入慢病用药目录，患者自付比例降低',
+          content: '多个省份将产品4纳入慢病用药目录，患者自付比例降低',
           relevance: '医保政策变化可能提升患者可及性',
         },
         {
           source: '竞品策略',
-          content: '某竞品在神经内科开展大规模学术推广活动，重点推广其普瑞巴林产品',
-          relevance: '竞品学术推广可能影响乐瑞卡的市场份额',
+          content: '某竞品在渠道分组2开展大规模学术推广活动，重点推广其分子式D产品',
+          relevance: '竞品学术推广可能影响产品4的市场份额',
         }
       );
       break;
 
-    case '左洛复':
+    case '产品5':
       info.push(
         {
           source: '政策环境',
@@ -516,38 +516,38 @@ function generateRelatedInfo(product: ProductPerformance) {
         },
         {
           source: '市场变化',
-          content: '抑郁症治疗中，SSRI类药物（如舍曲林）仍是首选，但新机制药物开始进入市场',
-          relevance: '新机制药物可能对传统SSRI类药物形成竞争',
+          content: '抑郁症治疗中，同类机制类药物（如分子式E）仍是首选，但新机制药物开始进入市场',
+          relevance: '新机制药物可能对传统同类机制类药物形成竞争',
         },
         {
-          source: '医院准入',
-          content: '部分医院精神科药品目录调整，左洛复在部分医院面临被其他SSRI替代的风险',
+          source: '渠道准入',
+          content: '部分渠道目录调整，产品5在部分医院面临被其他同类机制替代的风险',
           relevance: '可能解释市场份额下降的原因',
         },
         {
           source: '患者认知',
           content: '患者对抑郁症治疗的认知提升，但部分患者更倾向于选择价格更低的仿制药',
-          relevance: '价格敏感性可能影响左洛复的市场表现',
+          relevance: '价格敏感性可能影响产品5的市场表现',
         }
       );
       break;
 
-    case '怡诺思':
+    case '产品6':
       info.push(
         {
           source: '临床指南',
-          content: '《中国抑郁障碍防治指南》更新，文拉法辛在难治性抑郁症治疗中的地位得到强化',
-          relevance: '指南更新可能提升怡诺思在特定患者群体中的使用',
+          content: '《中国抑郁障碍防治指南》更新，分子式F在难治性抑郁症治疗中的地位得到强化',
+          relevance: '指南更新可能提升产品6在特定患者群体中的使用',
         },
         {
           source: '竞品动态',
-          content: '某竞品推出文拉法辛缓释剂型，声称副作用更小，在部分医院开始推广',
-          relevance: '竞品创新可能影响怡诺思的市场份额',
+          content: '某竞品推出分子式F缓释剂型，声称副作用更小，在部分渠道开始推广',
+          relevance: '竞品创新可能影响产品6的市场份额',
         },
         {
           source: '市场趋势',
           content: '精神科药物市场整体增长，但竞争加剧，各品牌都在加大市场投入',
-          relevance: '市场竞争加剧可能影响怡诺思的表现',
+          relevance: '市场竞争加剧可能影响产品6的表现',
         }
       );
       break;
@@ -579,9 +579,9 @@ function generateRelatedInfo(product: ProductPerformance) {
 
   if (product.deLimitRateChange < -3) {
     info.push({
-      source: '医院准入',
-      content: `${product.productName}解限率下降明显，可能与集采政策、医院目录调整或竞品替代有关`,
-      relevance: '解限率下降直接影响市场准入，需要优先解决',
+      source: '渠道准入',
+      content: `${product.productName}准入率下降明显，可能与集采政策、渠道目录调整或竞品替代有关`,
+      relevance: '准入率下降直接影响市场准入，需要优先解决',
     });
   }
 
@@ -607,7 +607,7 @@ function generateProvinceRelatedInfo(province: ProvincePerformance) {
     },
     {
       source: '市场动态',
-      content: `${province.provinceName}主要医院完成新一轮药品招标`,
+      content: `${province.provinceName}主要渠道终端完成新一轮药品招标`,
       relevance: '可能影响产品准入和市场份额',
     },
   ];
@@ -635,9 +635,9 @@ function generateCitations(product: ProductPerformance): Citation[] {
       id: `cite-${citationId++}`,
       type: 'internal',
       source: '内部数据',
-      content: `解限率从${product.deLimitRate + product.deLimitRateChange}%变化至${product.deLimitRate}%，下降${Math.abs(product.deLimitRateChange)}%`,
-      relevance: '解限率下降直接影响市场准入，可能导致销量下降',
-      dataPoint: `解限率下降${Math.abs(product.deLimitRateChange)}%`,
+      content: `准入率从${product.deLimitRate + product.deLimitRateChange}%变化至${product.deLimitRate}%，下降${Math.abs(product.deLimitRateChange)}%`,
+      relevance: '准入率下降直接影响市场准入，可能导致销量下降',
+      dataPoint: `准入率下降${Math.abs(product.deLimitRateChange)}%`,
     });
   }
 
@@ -696,7 +696,7 @@ function generateProvinceCitations(province: ProvincePerformance): Citation[] {
     id: `cite-${citationId++}`,
     type: 'internal',
     source: '内部数据',
-    content: `市场份额：${province.marketShare}%，ROI：${province.roi}，解限率：${province.deLimitRate}%，渗透率：${province.penetrationRate}%`,
+    content: `市场份额：${province.marketShare}%，ROI：${province.roi}，准入率：${province.deLimitRate}%，渗透率：${province.penetrationRate}%`,
     relevance: '核心维度数据反映省份在多个关键指标上的表现',
   });
 
@@ -854,8 +854,7 @@ function extractReasonKeywords(reason: string): string[] {
   
   // 添加常见业务关键词的同义词
   const synonymMap: Record<string, string[]> = {
-    '准入': ['准入', '解限', '医院准入', '市场准入'],
-    '解限': ['解限', '准入', '停控'],
+    '准入': ['准入', '渠道准入', '市场准入', '限制开具'],
     '价格': ['价格', '定价', '成本', '费用'],
     '竞品': ['竞品', '竞争对手', '竞争', '对手'],
     '渠道': ['渠道', '销售渠道', '分销'],
@@ -889,12 +888,12 @@ function findSegmentsByReasonType(
   
   // 定义原因类型和对应的关键词
   const typeKeywords: Record<string, string[]> = {
-    '准入': ['准入', '解限', '停控', '医院', '目录'],
+    '准入': ['准入', '限制开具', '渠道', '目录'],
     '价格': ['价格', '定价', '成本', '费用', '降价', '涨价'],
     '竞品': ['竞品', '竞争', '对手', '市场份额', '份额'],
-    '渠道': ['渠道', '分销', '零售', '医院', '电商'],
+    '渠道': ['渠道', '分销', '零售', '终端', '电商'],
     '团队': ['团队', '人员', '销售', '代表', '能力'],
-    '渗透': ['渗透', '覆盖', '使用率', '处方'],
+    '渗透': ['渗透', '覆盖', '使用率', '渠道份额'],
   };
   
   Object.entries(typeKeywords).forEach(([, keywords]) => {
@@ -928,8 +927,8 @@ function generateExplanation(
 
 // 基于类型生成解释
 function generateTypeBasedExplanation(reason: string, _segmentText: string): string { // eslint-disable-line @typescript-eslint/no-unused-vars
-  if (reason.includes('准入') || reason.includes('解限')) {
-    return `报告中的解限率和医院准入相关数据表明，${reason}是导致当前表现的重要因素。`;
+  if (reason.includes('准入')) {
+    return `报告中的准入率和渠道准入相关数据表明，${reason}是导致当前表现的重要因素。`;
   } else if (reason.includes('价格')) {
     return `报告中的价格竞争和市场数据支持${reason}的判断。`;
   } else if (reason.includes('竞品')) {

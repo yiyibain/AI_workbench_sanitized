@@ -19,7 +19,7 @@ export async function analyzeProblemCauses(
   historicalAnalyses?: ProblemCauseAnalysis[],
   userFeedback?: UserFeedback
 ): Promise<ProblemCauseAnalysis> {
-  const systemPrompt = `你是一名负责零售渠道心血管（降血脂）市场的资深数据分析专家。
+  const systemPrompt = `你是一名负责零售渠道目标治疗领域市场的资深数据分析专家。
 你的任务是针对特定问题，整合所有相关信息，梳理出关键的事实依据和原因分析。
 
 ## 任务要求
@@ -140,7 +140,7 @@ export async function generateStrategySolutions(
   causeAnalysis: ProblemCauseAnalysis,
   userFeedback?: UserFeedback
 ): Promise<StrategySolution[]> {
-  const systemPrompt = `你是一名负责零售渠道心血管（降血脂）市场的资深策略规划专家。
+  const systemPrompt = `你是一名负责零售渠道目标治疗领域市场的资深策略规划专家。
 你的任务是基于问题原因分析，提出具体可落地且能上升到策略级的解决方案。
 
 ## 任务要求
@@ -155,8 +155,8 @@ export async function generateStrategySolutions(
    - 策略建议3（资源/推广模式）：……
 
 4. **示例风格**（仅作参考，不要机械套用）：
-   - "基于10mg中标省份中立普妥WD明显低于可定，且大包装WD更低这一事实，建议将'提升10mg大包装分销率'设为优先级最高的渠道目标。具体动作包括：在仅10mg中标省份，对核心连锁药房设定WD提升至XX%的阶段性KPI，并通过进货返利、陈列资源和店员培训，确保大包装上架率显著改善。"
-   - "由于立普妥零售端包装规格小、长疗程使用不便，而竞品可定在大包装规格上更具优势，建议在院外推出或重点推广立普妥长疗程大包装，并配套'长期用药更省心'的患者教育话术和短期促销，以提升分子式内大包装占比，从而改善整体份额。"
+   - "基于低剂量中标省份中产品1WD明显低于竞品A，且大包装WD更低这一事实，建议将'提升低剂量大包装分销率'设为优先级最高的渠道目标。具体动作包括：在仅低剂量中标省份，对核心连锁药房设定WD提升至XX%的阶段性KPI，并通过进货返利、陈列资源和店员培训，确保大包装上架率显著改善。"
+   - "由于产品1零售端包装规格小、长疗程使用不便，而竞品竞品A在大包装规格上更具优势，建议在院外推出或重点推广产品1长疗程大包装，并配套'长期用药更省心'的患者教育话术和短期促销，以提升分子式内大包装占比，从而改善整体份额。"
 
 ## 输出格式
 请以JSON格式输出：
@@ -300,7 +300,7 @@ export async function reviseAnalysisBasedOnFeedback(
   revisedAnalysis: ProblemCauseAnalysis;
   revisedStrategies: StrategySolution[];
 }> {
-  const systemPrompt = `你是一名负责零售渠道心血管（降血脂）市场的资深数据分析专家。
+  const systemPrompt = `你是一名负责零售渠道目标治疗领域市场的资深数据分析专家。
 用户对你的分析提出了反馈，你需要根据用户的反馈调整分析和策略建议。
 
 ## 任务要求
@@ -407,7 +407,7 @@ export async function generateFinalStrategySummary(
     implementation: string;
   }>;
 }> {
-  const systemPrompt = `你是一名负责零售渠道心血管（降血脂）市场的资深策略规划专家。
+  const systemPrompt = `你是一名负责零售渠道目标治疗领域市场的资深策略规划专家。
 你的任务是总结所有策略，明确策略目标和实现方式。
 
 ## 任务要求
@@ -682,17 +682,17 @@ function generateMockResponse(messages: Array<{ role: string; content: string }>
     return JSON.stringify({
       coreFacts: [
         {
-          content: '立普妥零售市场分子式份额为9%，低于可定的12%，差距3个百分点',
+          content: '产品1零售市场分子式份额为9%，低于竞品A的12%，差距3个百分点',
           dataSource: '市场数据',
           relevance: '直接反映问题现状',
         },
         {
-          content: '立普妥10mg大包装WD为25.92，远低于可定10mg的46.85',
+          content: '产品1低剂量大包装WD为25.92，远低于竞品A低剂量的46.85',
           dataSource: '分销数据',
           relevance: '说明渠道覆盖不足',
         },
       ],
-      causeStatement: '立普妥在零售渠道表现不佳的主要原因包括：1）分子式内份额落后可定3个百分点；2）10mg大包装分销水平低，WD仅为25.92，远低于可定的46.85，说明渠道铺货不足限制了产品的可及性。',
+      causeStatement: '产品1在零售渠道表现不佳的主要原因包括：1）分子式内份额落后竞品A3个百分点；2）低剂量大包装分销水平低，WD仅为25.92，远低于竞品A的46.85，说明渠道铺货不足限制了产品的可及性。',
     });
   }
   
@@ -700,23 +700,23 @@ function generateMockResponse(messages: Array<{ role: string; content: string }>
     return JSON.stringify({
       strategies: [
         {
-          title: '提升10mg大包装分销率',
+          title: '提升低剂量大包装分销率',
           category: 'channel',
-          description: '基于10mg中标省份中立普妥WD明显低于可定，且大包装WD更低这一事实，建议将"提升10mg大包装分销率"设为优先级最高的渠道目标。',
+          description: '基于低剂量中标省份中产品1WD明显低于竞品A，且大包装WD更低这一事实，建议将"提升低剂量大包装分销率"设为优先级最高的渠道目标。',
           specificActions: [
-            '在仅10mg中标省份，对核心连锁药房设定WD提升至45%的阶段性KPI',
+            '在仅低剂量中标省份，对核心连锁药房设定WD提升至45%的阶段性KPI',
             '通过进货返利、陈列资源和店员培训，确保大包装上架率显著改善',
           ],
           strategicLevel: '渠道覆盖优先策略',
-          expectedOutcome: '10mg大包装WD从25.92提升至45%以上',
+          expectedOutcome: '低剂量大包装WD从25.92提升至45%以上',
           basedOnFacts: ['fact-1'],
         },
         {
           title: '推出长疗程大包装',
           category: 'product',
-          description: '由于立普妥零售端包装规格小、长疗程使用不便，而竞品可定在大包装规格上更具优势，建议在院外推出或重点推广立普妥长疗程大包装。',
+          description: '由于产品1零售端包装规格小、长疗程使用不便，而竞品竞品A在大包装规格上更具优势，建议在院外推出或重点推广产品1长疗程大包装。',
           specificActions: [
-            '在院外推出或重点推广立普妥长疗程大包装',
+            '在院外推出或重点推广产品1长疗程大包装',
             '配套"长期用药更省心"的患者教育话术和短期促销',
             '提升分子式内大包装占比',
           ],
@@ -730,17 +730,17 @@ function generateMockResponse(messages: Array<{ role: string; content: string }>
   
   if (userMessage.includes('第五步') || userMessage.includes('最终总结')) {
     return JSON.stringify({
-      finalSummary: '针对立普妥-零售问题，我们完成了原因分析和策略制定。核心问题是10mg大包装分销水平低，导致零售市场分子式份额落后可定。我们提出了两条核心策略：1）提升10mg大包装分销率；2）推出长疗程大包装。',
+      finalSummary: '针对产品1-零售问题，我们完成了原因分析和策略制定。核心问题是低剂量大包装分销水平低，导致零售市场分子式份额落后竞品A。我们提出了两条核心策略：1）提升低剂量大包装分销率；2）推出长疗程大包装。',
       strategyGoals: [
         {
           strategyId: 'strategy-1',
-          goal: '提升10mg大包装分销率',
+          goal: '提升低剂量大包装分销率',
           implementation: '通过对零售端进行进货返利、陈列资源和店员培训，对患者端进行患者教育话术和短期促销实现',
         },
         {
           strategyId: 'strategy-2',
           goal: '推出长疗程大包装',
-          implementation: '在院外推出或重点推广立普妥长疗程大包装，并配套患者教育话术和短期促销',
+          implementation: '在院外推出或重点推广产品1长疗程大包装，并配套患者教育话术和短期促销',
         },
       ],
     });

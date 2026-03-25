@@ -18,7 +18,7 @@ async function exampleDirectUsage() {
   const gapsResult = await client.analyzeScissorsGaps({
     marketData: [], // 实际使用时需要传入真实数据
     mekkoData: [],
-    selectedBrand: '立普妥',
+    selectedBrand: '产品1',
     selectedXAxisKey: 'province',
     selectedYAxisKey: 'brand',
     maxItems: 5,
@@ -29,7 +29,7 @@ async function exampleDirectUsage() {
   // 分析问题原因
   const causesResult = await client.analyzeProblemCauses({
     scissorsGaps: gapsResult.scissorsGaps,
-    selectedBrand: '立普妥',
+    selectedBrand: '产品1',
     maxProblems: 10,
   });
 
@@ -47,7 +47,7 @@ function ExampleReactComponent() {
       const analysisResult = await analyzeProblem({
         marketData: [], // 实际使用时需要传入真实数据
         mekkoData: [],
-        selectedBrand: '立普妥',
+        selectedBrand: '产品1',
         selectedXAxisKey: 'province',
         selectedYAxisKey: 'brand',
         maxItems: 5,
@@ -97,7 +97,7 @@ function ExampleStepByStep() {
     const gaps = await analyzeGaps({
       marketData: [],
       mekkoData: [],
-      selectedBrand: '立普妥',
+      selectedBrand: '产品1',
     });
 
     console.log('第一步完成，发现', gaps.length, '个剪刀差');
@@ -106,7 +106,7 @@ function ExampleStepByStep() {
     // 第二步：分析原因
     const causes = await analyzeCauses({
       scissorsGaps: gaps,
-      selectedBrand: '立普妥',
+      selectedBrand: '产品1',
     });
 
     console.log('第二步完成，分析了', causes.length, '个问题的原因');
@@ -127,10 +127,10 @@ async function exampleQueryData() {
   const dosageResult = await client.queryMarketData({
     functionName: 'queryByDosage',
     args: {
-      dosage: '10mg',
-      brand: '立普妥',
+      dosage: '低剂量',
+      brand: '产品1',
     },
-    selectedBrand: '立普妥',
+    selectedBrand: '产品1',
   });
 
   console.log('剂量查询结果:', dosageResult);
@@ -139,10 +139,10 @@ async function exampleQueryData() {
   const wdResult = await client.queryMarketData({
     functionName: 'queryWD',
     args: {
-      brand: '立普妥',
-      dosage: '20mg',
+      brand: '产品1',
+      dosage: '高剂量',
     },
-    selectedBrand: '立普妥',
+    selectedBrand: '产品1',
   });
 
   console.log('分销率查询结果:', wdResult);

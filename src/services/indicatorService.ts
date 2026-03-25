@@ -20,6 +20,44 @@ import {
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
 const DEEPSEEK_API_KEY = import.meta.env.VITE_DEEPSEEK_API_KEY || '';
 
+function buildStrategyKeywords(strategy: Strategy): string[] {
+  const raw = [strategy.name, strategy.description, ...strategy.focusAreas, ...strategy.targetOutcomes]
+    .join(' ')
+    .toLowerCase();
+
+  const seeds = raw
+    .split(/[\s,，。；;、:：/\\|()\[\]{}\-_"'“”‘’]+/)
+    .map((s) => s.trim())
+    .filter((s) => s.length >= 2);
+
+  // 复合策略的语义扩展，提升“低剂量/大包装/分销/长疗程”等命中率
+  const expanded: string[] = [];
+  if (raw.includes('低剂量')) expanded.push('低剂量');
+  if (raw.includes('高剂量')) expanded.push('高剂量');
+  if (raw.includes('大包装')) expanded.push('大包装');
+  if (raw.includes('长疗程')) expanded.push('长疗程');
+  if (raw.includes('分销') || raw.includes('铺货') || raw.includes('wd')) expanded.push('分销', '铺货', 'wd');
+  if (raw.includes('零售')) expanded.push('零售渠道', '零售');
+  if (raw.includes('渠道')) expanded.push('渠道');
+
+  return Array.from(new Set([...seeds, ...expanded]));
+}
+
+function scoreIndicatorByKeywords(ind: Indicator, keywords: string[]): number {
+  const text = `${ind.name} ${ind.description} ${ind.tags.join(' ')}`.toLowerCase();
+  let score = 0;
+
+  for (const kw of keywords) {
+    if (text.includes(kw)) {
+      // 名称命中权重更高
+      if (ind.name.toLowerCase().includes(kw)) score += 3;
+      else if (ind.tags.some((t) => t.toLowerCase().includes(kw))) score += 2;
+      else score += 1;
+    }
+  }
+  return score;
+}
+
 // 获取所有指标（长清单）
 export async function getAllIndicators(filter?: IndicatorFilter): Promise<Indicator[]> {
   // 模拟API调用延迟
@@ -87,26 +125,21 @@ export async function getPotentialIndicatorsByStrategy(
     return [];
   }
 
-  // 模拟AI筛选逻辑：根据策略的重点领域和目标结果筛选相关指标
-  const relevantIndicators = mockIndicators.filter((ind) => {
-    // 根据策略的focusAreas和targetOutcomes匹配指标
-    const strategyKeywords = [
-      ...strategy.focusAreas,
-      ...strategy.targetOutcomes,
-    ].map((s) => s.toLowerCase());
+  // 规则筛选：关键词打分（避免“整句匹配不到”导致短清单=0）
+  const strategyKeywords = buildStrategyKeywords(strategy);
+  const scoredIndicators = mockIndicators
+    .map((ind) => ({ ind, score: scoreIndicatorByKeywords(ind, strategyKeywords) }))
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score);
 
-    return (
-      strategyKeywords.some((keyword) =>
-        ind.name.toLowerCase().includes(keyword)
-      ) ||
-      strategyKeywords.some((keyword) =>
-        ind.description.toLowerCase().includes(keyword)
-      ) ||
-      strategyKeywords.some((keyword) =>
-        ind.tags.some((tag) => tag.toLowerCase().includes(keyword))
-      )
-    );
-  });
+  let relevantIndicators = scoredIndicators.map((item) => item.ind);
+
+  // 兜底：如果仍为空，至少返回与“过程/结果核心指标”相关的一批
+  if (relevantIndicators.length === 0) {
+    relevantIndicators = mockIndicators
+      .filter((ind) => ind.isCore || ind.category === 'process' || ind.category === 'result')
+      .slice(0, 20);
+  }
 
   // 如果API Key存在，调用AI进行更精准的筛选
   if (DEEPSEEK_API_KEY) {
@@ -149,11 +182,15 @@ ${mockIndicators.map((ind) => `- ${ind.id}: ${ind.name} (${ind.description})`).j
       const aiResponse = response.data.choices[0]?.message?.content || '';
       // 尝试从AI响应中提取指标ID
       const indicatorIds = aiResponse
-        .match(/ind\d+/g)
+        .match(/ind-[a-z0-9-]+/gi)
+        ?.map((id: string) => id.toLowerCase())
         ?.filter((id: string, index: number, self: string[]) => self.indexOf(id) === index) || [];
 
       if (indicatorIds.length > 0) {
-        return mockIndicators.filter((ind) => indicatorIds.includes(ind.id));
+        const aiFiltered = mockIndicators.filter((ind) => indicatorIds.includes(ind.id.toLowerCase()));
+        if (aiFiltered.length > 0) {
+          return aiFiltered;
+        }
       }
     } catch (error) {
       console.error('AI筛选指标失败，使用规则筛选:', error);

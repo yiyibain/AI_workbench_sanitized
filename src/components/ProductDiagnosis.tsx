@@ -123,7 +123,7 @@ export default function ProductDiagnosis({ product }: ProductDiagnosisProps) {
       key: 'competitorShare',
     },
     {
-      name: '解限率',
+      name: '准入率',
       value: product.deLimitRate,
       change: product.deLimitRateChange,
       key: 'deLimitRate',
@@ -253,7 +253,7 @@ export default function ProductDiagnosis({ product }: ProductDiagnosisProps) {
               onClick={() => handleIndicatorClick('competitorShare')}
             />
             <MetricCard
-              label="解限率"
+              label="准入率"
               value={`${product.deLimitRate}%`}
               change={product.deLimitRateChange}
               onClick={() => handleIndicatorClick('deLimitRate')}
@@ -363,9 +363,9 @@ export default function ProductDiagnosis({ product }: ProductDiagnosisProps) {
                 productId: product.productId,
                 productName: product.productName,
                 riskLevel: 'high',
-                riskType: '解限率下降',
-                description: `解限率下降${Math.abs(product.deLimitRateChange)}%，可能影响市场准入`,
-                indicators: ['解限率'],
+                riskType: '准入率下降',
+                description: `准入率下降${Math.abs(product.deLimitRateChange)}%，可能影响市场准入`,
+                indicators: ['准入率'],
                 changeMagnitude: Math.abs(product.deLimitRateChange),
               });
             }

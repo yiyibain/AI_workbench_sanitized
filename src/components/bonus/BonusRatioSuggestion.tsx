@@ -22,18 +22,18 @@ export default function BonusRatioSuggestion() {
       const brand = TEN_BRANDS.find((b) => b.id === pkg.brandId);
       if (brand?.subBrands && brand.subBrands.length > 0) {
         // 根据图片和用户确认，子品牌的值是独立的：
-        // 疼痛: 西乐葆12%, 乐瑞卡6%
-        // 精神: 左洛复8%, 怡诺思4%
-        // 利加隆/维固力/迪敏思: 利加隆8%, 维固力2%, 迪敏思2%
+        // 产品组A: 产品312%, 产品46%
+        // 产品组B: 产品58%, 产品64%
+        // 产品9/产品10/迪敏思: 产品98%, 产品102%, 迪敏思2%
         let subBrandRatios: number[] = [];
         if (pkg.brandId === 'brand-3') {
-          // 疼痛: 西乐葆12%, 乐瑞卡6%
+          // 产品组A: 产品312%, 产品46%
           subBrandRatios = [12, 6];
         } else if (pkg.brandId === 'brand-4') {
-          // 精神: 左洛复8%, 怡诺思4%
+          // 产品组B: 产品58%, 产品64%
           subBrandRatios = [8, 4];
         } else if (pkg.brandId === 'brand-7') {
-          // 利加隆/维固力/迪敏思: 利加隆8%, 维固力2%, 迪敏思2%
+          // 产品9/产品10/迪敏思: 产品98%, 产品102%, 迪敏思2%
           subBrandRatios = [8, 2, 2];
         } else {
           // 默认平均分配
@@ -630,7 +630,7 @@ export default function BonusRatioSuggestion() {
         const newMessages = [...prev];
         newMessages[newMessages.length - 1] = {
           role: 'assistant',
-          content: '抱歉，处理您的指令时出现错误。请尝试更具体的指令，如"发展Non-CV产品，结果指标给多一点"。',
+          content: '抱歉，处理您的指令时出现错误。请尝试更具体的指令，如"发展Tier2产品，结果指标给多一点"。',
         };
         return newMessages;
       });
@@ -693,7 +693,7 @@ export default function BonusRatioSuggestion() {
               <p className="text-sm text-blue-800 mb-2">
                 基于指标规划板块确定的考核指标，通过拖拽添加/更换指标，通过自然语言交互调节不同奖金包的比重。
                 对于包含子品牌的品牌，表头合并显示，数据行按子品牌分列。
-                支持策略性指令，如"发展Non-CV产品，结果指标给多一点"，系统将自动调整比例并保持总奖金包为100%。
+                支持策略性指令，如"发展Tier2产品，结果指标给多一点"，系统将自动调整比例并保持总奖金包为100%。
               </p>
               <div className="flex items-center space-x-4 text-sm">
                 <div className="flex items-center space-x-2">
@@ -754,11 +754,11 @@ export default function BonusRatioSuggestion() {
               <p className="text-sm text-gray-500 text-center py-4">
                 请输入策略性指令，例如：
                 <br />
-                "发展Non-CV产品，结果指标给多一点"
+                "发展Tier2产品，结果指标给多一点"
                 <br />
-                "重点支持疼痛品牌，提高过程指标权重"
+                "重点支持产品组A，提高过程指标权重"
                 <br />
-                "将立普妥的总奖金包比例增加5%"
+                "将产品1的总奖金包比例增加5%"
               </p>
             ) : (
               <div className="space-y-2">

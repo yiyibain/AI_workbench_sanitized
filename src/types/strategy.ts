@@ -18,7 +18,7 @@ export interface MarketDataPoint {
   dimension2?: string; // 纵轴维度值
   [key: string]: any; // 支持动态维度字段（dimension3, dimension4, ...）
   value: number; // 市场份额或销售额
-  huiZhiShare?: number; // 晖致份额
+  companyShare?: number; // 某医药公司份额
   competitorShare?: number; // 竞品份额
   growthRate?: number; // 增长率
   province?: string; // 省份
@@ -76,7 +76,7 @@ export interface StrategyDirection {
   title: string;
   description: string;
   actions: string[]; // 具体实施建议
-  basedOnLogic: 'deLimit' | 'penetration' | 'expansion'; // 基于解限/渗透/做广
+  basedOnLogic: 'deLimit' | 'penetration' | 'expansion'; // 基于准入/渗透/扩面
 }
 
 // 策略建议

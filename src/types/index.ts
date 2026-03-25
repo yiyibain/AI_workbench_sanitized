@@ -19,12 +19,12 @@ export interface QuarterlyIndicator {
 export interface BasicIndicatorQuarterly {
   period: string; // 季度，如 "2024-Q1"
   // 结果指标
-  statinShare: number; // 立普妥占他汀份额 (%)
+  statinShare: number; // 产品1占相关分子式份额 (%)
   // 过程指标
-  coreHospitalPenetration: number; // 核心影响型医院渗透率 (%)
+  coreHospitalPenetration: number; // 渠道1份额 (%)
   stableDistributionRate: number; // 稳定分销率 (%)
-  weightedDeLimitRate: number; // 加权解限率 (%)
-  targetHospitalPenetration: number; // 目标影响型医院渗透率 (%)
+  weightedDeLimitRate: number; // 渠道3覆盖率 (%)
+  targetHospitalPenetration: number; // 核心渠道份额 (%)
 }
 
 // 基础指标数据
@@ -47,8 +47,8 @@ export interface ProductPerformance {
   competitorShare: number; // 竞品份额 (%)
   competitorShareChange: number; // 竞品份额变化 (%)
   // 内部数据
-  deLimitRate: number; // 解限率 (%)
-  deLimitRateChange: number; // 解限率变化 (%)
+  deLimitRate: number; // 准入率 (%)
+  deLimitRateChange: number; // 准入率变化 (%)
   // 时间维度
   period: string; // 季度，如 "2024-Q1"
   previousPeriod: string; // 上一季度
@@ -81,9 +81,9 @@ export interface ProvincePerformance {
   // 核心维度
   marketShare: number; // 市场份额 (%)
   roi: number; // ROI
-  nonLiluRatio: number; // 非立络占比 (%)
+  nonLiluRatio: number; // Tier2产品占比 (%)
   // 核心指标
-  deLimitRate: number; // 解限率 (%)
+  deLimitRate: number; // 准入率 (%)
   penetrationRate: number; // 渗透率 (%)
   // 健康度评分
   healthScore: number; // 0-100

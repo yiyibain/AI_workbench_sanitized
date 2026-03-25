@@ -641,7 +641,7 @@ function generateAnomaliesWithCausesAndRisks(
     const previous = indicators.quarterlyData[indicators.quarterlyData.length - 2];
     const weightedDeLimitChange = latest.weightedDeLimitRate - previous.weightedDeLimitRate;
     
-    // 如果加权解限率下降超过1%，生成异常（使用过程指标数据）
+    // 如果加权准入率下降超过1%，生成异常（使用过程指标数据）
     if (weightedDeLimitChange < -1) {
       const avgDeLimitRate = provinceDetails.reduce((sum, p) => sum + p.deLimitRate, 0) / provinceDetails.length;
       const deLimitDeclineProvinces = provinceDetails
@@ -654,10 +654,10 @@ function generateAnomaliesWithCausesAndRisks(
         type: 'indicator',
         category: 'national',
         severity: Math.abs(weightedDeLimitChange) > 2 ? 'high' : 'medium',
-        title: '加权解限率下降明显',
-        description: `${product.productName}加权解限率从${previous.weightedDeLimitRate.toFixed(1)}%下降至${latest.weightedDeLimitRate.toFixed(1)}%，下降${Math.abs(weightedDeLimitChange).toFixed(1)}%，可能影响市场准入`,
+        title: '加权准入率下降明显',
+        description: `${product.productName}加权准入率从${previous.weightedDeLimitRate.toFixed(1)}%下降至${latest.weightedDeLimitRate.toFixed(1)}%，下降${Math.abs(weightedDeLimitChange).toFixed(1)}%，可能影响市场准入`,
         dataPoint: {
-          label: '加权解限率',
+          label: '加权准入率',
           value: latest.weightedDeLimitRate.toFixed(1),
           change: weightedDeLimitChange,
           unit: '%',
@@ -666,34 +666,34 @@ function generateAnomaliesWithCausesAndRisks(
         relatedData: [
           {
             type: '过程指标',
-            source: '加权解限率',
+            source: '加权准入率',
             value: `${latest.weightedDeLimitRate.toFixed(1)}%`,
           },
           {
             type: '过程指标',
-            source: '上季度加权解限率',
+            source: '上季度加权准入率',
             value: `${previous.weightedDeLimitRate.toFixed(1)}%`,
           },
           {
             type: '内部数据',
-            source: '平均省份解限率',
+            source: '平均省份准入率',
             value: `${avgDeLimitRate.toFixed(1)}%`,
           },
         ],
         possibleCauses: deLimitDeclineProvinces.length > 0 ? [
           {
-            cause: `加权解限率从${previous.weightedDeLimitRate.toFixed(1)}%下降至${latest.weightedDeLimitRate.toFixed(1)}%，下降${Math.abs(weightedDeLimitChange).toFixed(1)}%。${deLimitDeclineProvinces.length > 0 ? `${deLimitDeclineProvinces[0].provinceName}等省份解限率下降尤其明显，可能由于集采政策影响、医院目录调整或竞品替代策略` : '可能由于集采政策影响、医院目录调整或竞品替代策略'}`,
+            cause: `加权准入率从${previous.weightedDeLimitRate.toFixed(1)}%下降至${latest.weightedDeLimitRate.toFixed(1)}%，下降${Math.abs(weightedDeLimitChange).toFixed(1)}%。${deLimitDeclineProvinces.length > 0 ? `${deLimitDeclineProvinces[0].provinceName}等省份准入率下降尤其明显，可能由于集采政策影响、医院目录调整或竞品替代策略` : '可能由于集采政策影响、医院目录调整或竞品替代策略'}`,
             evidence: [
               {
                 type: 'data' as const,
                 source: '过程指标数据',
-                description: `加权解限率从${previous.weightedDeLimitRate.toFixed(1)}%下降至${latest.weightedDeLimitRate.toFixed(1)}%，下降${Math.abs(weightedDeLimitChange).toFixed(1)}%`,
+                description: `加权准入率从${previous.weightedDeLimitRate.toFixed(1)}%下降至${latest.weightedDeLimitRate.toFixed(1)}%，下降${Math.abs(weightedDeLimitChange).toFixed(1)}%`,
                 dataPoint: '低于基准水平（20%左右）',
               },
               ...(deLimitDeclineProvinces.length > 0 ? [{
                 type: 'data' as const,
-                source: '省份解限率数据',
-                description: `${deLimitDeclineProvinces[0].provinceName}解限率${deLimitDeclineProvinces[0].deLimitRate.toFixed(1)}%，下降${Math.abs(deLimitDeclineProvinces[0].deLimitRateChange || 0).toFixed(1)}%`,
+                source: '省份准入率数据',
+                description: `${deLimitDeclineProvinces[0].provinceName}准入率${deLimitDeclineProvinces[0].deLimitRate.toFixed(1)}%，下降${Math.abs(deLimitDeclineProvinces[0].deLimitRateChange || 0).toFixed(1)}%`,
                 dataPoint: '低于平均水平',
               } as const] : []),
               {
@@ -707,11 +707,11 @@ function generateAnomaliesWithCausesAndRisks(
         ] : undefined,
         riskImplications: {
           riskLevel: Math.abs(weightedDeLimitChange) > 2 ? 'high' : 'medium',
-          riskDescription: '加权解限率显著下降，可能影响产品市场准入和销量',
+          riskDescription: '加权准入率显著下降，可能影响产品市场准入和销量',
           suggestedActions: {
             shortTerm: [
-              '立即与解限率下降省份的医院沟通，了解具体障碍',
-              '加强解限团队投入，优先解决高价值医院准入问题',
+              '立即与准入率下降省份的医院沟通，了解具体障碍',
+              '加强准入团队投入，优先解决高价值医院准入问题',
               '评估价格策略，提升产品竞争力',
             ],
             longTerm: [
@@ -724,7 +724,7 @@ function generateAnomaliesWithCausesAndRisks(
       });
     }
   } else if (product.deLimitRateChange < -3) {
-    // 如果没有过程指标数据，使用产品级别的解限率数据（向后兼容）
+    // 如果没有过程指标数据，使用产品级别的准入率数据（向后兼容）
     const avgDeLimitRate = provinceDetails.reduce((sum, p) => sum + p.deLimitRate, 0) / provinceDetails.length;
     const deLimitDeclineProvinces = provinceDetails
       .filter((p) => p.deLimitRate < 70 && (p.deLimitRateChange || 0) < -2)
@@ -736,10 +736,10 @@ function generateAnomaliesWithCausesAndRisks(
       type: 'indicator',
       category: 'national',
       severity: Math.abs(product.deLimitRateChange) > 5 ? 'high' : 'medium',
-      title: '品牌整体解限率下降明显',
-      description: `${product.productName}整体解限率从${(product.deLimitRate - product.deLimitRateChange).toFixed(1)}%下降至${product.deLimitRate.toFixed(1)}%，下降${Math.abs(product.deLimitRateChange).toFixed(1)}%，可能影响市场准入`,
+      title: '品牌整体准入率下降明显',
+      description: `${product.productName}整体准入率从${(product.deLimitRate - product.deLimitRateChange).toFixed(1)}%下降至${product.deLimitRate.toFixed(1)}%，下降${Math.abs(product.deLimitRateChange).toFixed(1)}%，可能影响市场准入`,
       dataPoint: {
-        label: '整体解限率',
+        label: '整体准入率',
         value: product.deLimitRate.toFixed(1),
         change: product.deLimitRateChange,
         unit: '%',
@@ -748,23 +748,23 @@ function generateAnomaliesWithCausesAndRisks(
       relatedData: [
         {
           type: '内部数据',
-          source: '品牌解限率',
+          source: '品牌准入率',
           value: `${product.deLimitRate}%`,
         },
         {
           type: '内部数据',
-          source: '平均省份解限率',
+          source: '平均省份准入率',
           value: `${avgDeLimitRate.toFixed(1)}%`,
         },
       ],
       possibleCauses: deLimitDeclineProvinces.length > 0 ? [
         {
-          cause: `${deLimitDeclineProvinces[0].provinceName}解限率下降尤其多，从${(deLimitDeclineProvinces[0].deLimitRate - (deLimitDeclineProvinces[0].deLimitRateChange || 0)).toFixed(1)}%下降至${deLimitDeclineProvinces[0].deLimitRate.toFixed(1)}%，可能由于集采政策影响、医院目录调整或竞品替代策略`,
+          cause: `${deLimitDeclineProvinces[0].provinceName}准入率下降尤其多，从${(deLimitDeclineProvinces[0].deLimitRate - (deLimitDeclineProvinces[0].deLimitRateChange || 0)).toFixed(1)}%下降至${deLimitDeclineProvinces[0].deLimitRate.toFixed(1)}%，可能由于集采政策影响、医院目录调整或竞品替代策略`,
           evidence: [
             {
               type: 'data' as const,
-              source: '省份解限率数据',
-              description: `${deLimitDeclineProvinces[0].provinceName}解限率${deLimitDeclineProvinces[0].deLimitRate.toFixed(1)}%，下降${Math.abs(deLimitDeclineProvinces[0].deLimitRateChange || 0).toFixed(1)}%`,
+              source: '省份准入率数据',
+              description: `${deLimitDeclineProvinces[0].provinceName}准入率${deLimitDeclineProvinces[0].deLimitRate.toFixed(1)}%，下降${Math.abs(deLimitDeclineProvinces[0].deLimitRateChange || 0).toFixed(1)}%`,
               dataPoint: '低于平均水平',
             },
             {
@@ -783,11 +783,11 @@ function generateAnomaliesWithCausesAndRisks(
       ] : undefined,
       riskImplications: {
         riskLevel: Math.abs(product.deLimitRateChange) > 5 ? 'high' : 'medium',
-        riskDescription: '多省份出现解限率显著下降，可能影响产品市场准入和销量',
+        riskDescription: '多省份出现准入率显著下降，可能影响产品市场准入和销量',
         suggestedActions: {
           shortTerm: [
-            '立即与解限率下降省份的医院沟通，了解具体障碍',
-            '加强解限团队投入，优先解决高价值医院准入问题',
+            '立即与准入率下降省份的医院沟通，了解具体障碍',
+            '加强准入团队投入，优先解决高价值医院准入问题',
             '评估价格策略，提升产品竞争力',
           ],
           longTerm: [
@@ -946,7 +946,7 @@ function generateAnomaliesWithCausesAndRisks(
   }
 
   // 部分省份预警 - 关注不同的思考框架，不重复全国共性的问题
-  // 1. 高潜医院做的有问题
+  // 1. 高潜渠道组做的有问题
   provinceDetails.forEach((province) => {
     const highPotentialHospitals = province.hospitals.filter((h) => h.type === 'highPotential');
     if (highPotentialHospitals.length > 0) {
@@ -960,10 +960,10 @@ function generateAnomaliesWithCausesAndRisks(
           type: 'hospital',
           category: 'province',
           severity: avgPenetration < 35 || decliningCount > highPotentialHospitals.length * 0.6 ? 'high' : 'medium',
-          title: `${province.provinceName}高潜医院表现不佳`,
-          description: `${province.provinceName}高潜医院平均渗透率仅${avgPenetration.toFixed(1)}%，未发挥增长潜力`,
+          title: `${province.provinceName}高潜渠道组表现不佳`,
+          description: `${province.provinceName}高潜渠道组平均渗透率仅${avgPenetration.toFixed(1)}%，未发挥增长潜力`,
           dataPoint: {
-            label: '高潜医院平均渗透率',
+            label: '高潜渠道组平均渗透率',
             value: avgPenetration.toFixed(1),
             change: decliningCount > 0 ? -((decliningCount / highPotentialHospitals.length) * 100) : 0,
             unit: '%',
@@ -974,28 +974,28 @@ function generateAnomaliesWithCausesAndRisks(
           relatedData: [
             {
               type: '内部数据',
-              source: '高潜医院平均渗透率',
+              source: '高潜渠道组平均渗透率',
               value: `${avgPenetration.toFixed(1)}%`,
             },
           ],
           possibleCauses: [
             {
-              cause: '高潜医院可能未获得足够的市场投入和人员支持，或医生教育覆盖不够',
+              cause: '高潜渠道组可能未获得足够的市场投入和人员支持，或医生教育覆盖不够',
               evidence: [
                 {
                   type: 'data' as const,
-                  source: '高潜医院渗透率数据',
-                  description: `${province.provinceName}高潜医院平均渗透率${avgPenetration.toFixed(1)}%，低于目标水平`,
+                  source: '高潜渠道组渗透率数据',
+                  description: `${province.provinceName}高潜渠道组平均渗透率${avgPenetration.toFixed(1)}%，低于目标水平`,
                 },
                 {
                   type: 'internal' as const,
                   source: '资源分配',
-                  description: '该省份高潜医院可能未获得足够的市场投入和人员支持',
+                  description: '该省份高潜渠道组可能未获得足够的市场投入和人员支持',
                 },
                 {
                   type: 'internal' as const,
                   source: '医生教育',
-                  description: '医生教育覆盖可能不够，影响高潜医院的产品认知和处方习惯',
+                  description: '医生教育覆盖可能不够，影响高潜渠道组的产品认知和处方习惯',
                 },
               ],
               confidence: 'high' as const,
@@ -1003,15 +1003,15 @@ function generateAnomaliesWithCausesAndRisks(
           ],
           riskImplications: {
             riskLevel: avgPenetration < 35 || decliningCount > highPotentialHospitals.length * 0.6 ? 'high' : 'medium',
-            riskDescription: '高潜医院增长潜力未发挥，可能影响整体市场份额提升',
+            riskDescription: '高潜渠道组增长潜力未发挥，可能影响整体市场份额提升',
             suggestedActions: {
               shortTerm: [
-                '增加高潜医院的市场投入和人员配置',
+                '增加高潜渠道组的市场投入和人员配置',
                 '加强医生教育和学术推广活动',
-                '优化销售团队在高潜医院的覆盖',
+                '优化销售团队在高潜渠道组的覆盖',
               ],
               longTerm: [
-                '建立高潜医院识别和培育机制',
+                '建立高潜渠道组识别和培育机制',
                 '制定针对性的市场开发策略',
                 '建立长期合作关系和KOL网络',
               ],
@@ -1022,7 +1022,7 @@ function generateAnomaliesWithCausesAndRisks(
     }
   });
 
-  // 2. 核心影响型医院份额没做高
+  // 2. 重点医院份额没做高
   provinceDetails.forEach((province) => {
     const coreHospitals = province.hospitals.filter((h) => h.type === 'core');
     if (coreHospitals.length > 0) {
@@ -1036,10 +1036,10 @@ function generateAnomaliesWithCausesAndRisks(
           type: 'hospital',
           category: 'province',
           severity: avgMarketShare < province.marketShare * 0.7 || decliningCount > coreHospitals.length * 0.6 ? 'high' : 'medium',
-          title: `${province.provinceName}核心医院份额未达预期`,
-          description: `${province.provinceName}核心医院平均市场份额${avgMarketShare.toFixed(1)}%，低于省份平均水平${province.marketShare.toFixed(1)}%`,
+          title: `${province.provinceName}核心渠道组份额未达预期`,
+          description: `${province.provinceName}核心渠道组平均市场份额${avgMarketShare.toFixed(1)}%，低于省份平均水平${province.marketShare.toFixed(1)}%`,
           dataPoint: {
-            label: '核心医院平均市场份额',
+            label: '核心渠道组平均市场份额',
             value: avgMarketShare.toFixed(1),
             change: decliningCount > 0 ? -((decliningCount / coreHospitals.length) * 100) : 0,
             unit: '%',
@@ -1050,7 +1050,7 @@ function generateAnomaliesWithCausesAndRisks(
           relatedData: [
             {
               type: '内部数据',
-              source: '核心医院平均市场份额',
+              source: '核心渠道组平均市场份额',
               value: `${avgMarketShare.toFixed(1)}%`,
             },
             {
@@ -1061,22 +1061,22 @@ function generateAnomaliesWithCausesAndRisks(
           ],
           possibleCauses: [
             {
-              cause: '核心医院可能未获得足够的学术推广支持，或医生处方习惯发生变化',
+              cause: '核心渠道组可能未获得足够的学术推广支持，或医生处方习惯发生变化',
               evidence: [
                 {
                   type: 'data' as const,
-                  source: '核心医院市场份额数据',
-                  description: `${province.provinceName}核心医院平均市场份额${avgMarketShare.toFixed(1)}%，低于省份平均水平`,
+                  source: '核心渠道组市场份额数据',
+                  description: `${province.provinceName}核心渠道组平均市场份额${avgMarketShare.toFixed(1)}%，低于省份平均水平`,
                 },
                 {
                   type: 'internal' as const,
                   source: '学术推广',
-                  description: '核心医院可能未获得足够的学术推广活动支持',
+                  description: '核心渠道组可能未获得足够的学术推广活动支持',
                 },
                 {
                   type: 'external' as const,
                   source: '医生行为',
-                  description: '医生处方习惯可能发生变化，或竞品加强了核心医院的推广',
+                  description: '医生处方习惯可能发生变化，或竞品加强了核心渠道组的推广',
                 },
               ],
               confidence: 'medium' as const,
@@ -1084,17 +1084,17 @@ function generateAnomaliesWithCausesAndRisks(
           ],
           riskImplications: {
             riskLevel: avgMarketShare < province.marketShare * 0.7 || decliningCount > coreHospitals.length * 0.6 ? 'high' : 'medium',
-            riskDescription: '核心医院份额未达预期，可能影响整体市场份额和品牌影响力',
+            riskDescription: '核心渠道组份额未达预期，可能影响整体市场份额和品牌影响力',
             suggestedActions: {
               shortTerm: [
-                '加强核心医院的学术推广活动',
+                '加强核心渠道组的学术推广活动',
                 '与关键医生建立更紧密的关系',
                 '提供更有针对性的产品教育',
               ],
               longTerm: [
-                '建立核心医院KOL关系网络',
+                '建立核心渠道组KOL关系网络',
                 '持续跟踪医生处方行为变化',
-                '优化产品在核心医院的定位',
+                '优化产品在核心渠道组的定位',
               ],
             },
           },
@@ -1186,7 +1186,7 @@ function generateMacroRecommendations(anomalies: AnomalyFinding[]): MacroRecomme
   const recommendations: MacroRecommendation[] = [];
   let recId = 1;
 
-  const hasDeLimitAnomaly = anomalies.some((a) => a.title.includes('解限率'));
+  const hasDeLimitAnomaly = anomalies.some((a) => a.title.includes('准入率'));
   const hasShareAnomaly = anomalies.some((a) => a.title.includes('份额'));
   const hasCompetitorAnomaly = anomalies.some((a) => a.title.includes('竞品'));
 
@@ -1195,7 +1195,7 @@ function generateMacroRecommendations(anomalies: AnomalyFinding[]): MacroRecomme
       id: `rec-${recId++}`,
       category: 'strategy',
       title: '建立系统化的医院准入管理体系',
-      description: '针对解限率下降问题，建议建立更完善的医院准入监控、预警和应对机制，确保市场准入稳定',
+      description: '针对准入率下降问题，建议建立更完善的医院准入监控、预警和应对机制，确保市场准入稳定',
       priority: 'high',
       relatedRiskPoints: [],
     });

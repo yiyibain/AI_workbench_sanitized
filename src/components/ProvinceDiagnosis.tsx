@@ -131,12 +131,12 @@ export default function ProvinceDiagnosis({ province }: ProvinceDiagnosisProps) 
       fullMark: 100,
     },
     {
-      subject: '非立络占比',
+      subject: '非核心产品占比',
       value: province.nonLiluRatio * 2, // 归一化
       fullMark: 100,
     },
     {
-      subject: '解限率',
+      subject: '准入率',
       value: province.deLimitRate,
       fullMark: 100,
     },
@@ -159,12 +159,12 @@ export default function ProvinceDiagnosis({ province }: ProvinceDiagnosisProps) 
       target: 1.8,
     },
     {
-      name: '非立络占比',
+      name: '非核心产品占比',
       value: province.nonLiluRatio,
       target: 45.0,
     },
     {
-      name: '解限率',
+      name: '准入率',
       value: province.deLimitRate,
       target: 85.0,
     },
@@ -238,12 +238,12 @@ export default function ProvinceDiagnosis({ province }: ProvinceDiagnosisProps) 
               target={1.8}
             />
             <MetricCard
-              label="非立络占比"
+              label="非核心产品占比"
               value={`${province.nonLiluRatio}%`}
               target={45.0}
             />
             <MetricCard
-              label="解限率"
+              label="准入率"
               value={`${province.deLimitRate}%`}
               target={85.0}
             />
@@ -303,8 +303,8 @@ export default function ProvinceDiagnosis({ province }: ProvinceDiagnosisProps) 
             if (province.deLimitRate < 70) {
               riskAlerts.push({
                 riskLevel: 'medium',
-                riskType: '解限率偏低',
-                description: `解限率${province.deLimitRate}%，低于目标值`,
+                riskType: '准入率偏低',
+                description: `准入率${province.deLimitRate}%，低于目标值`,
               });
             }
 

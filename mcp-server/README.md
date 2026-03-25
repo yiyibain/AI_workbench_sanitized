@@ -54,7 +54,7 @@ function MyComponent() {
       const result = await analyzeProblem({
         marketData: [...],
         mekkoData: [...],
-        selectedBrand: '立普妥',
+        selectedBrand: '产品1',
         selectedXAxisKey: 'province',
         selectedYAxisKey: 'brand',
         availableDimensions: [...],
@@ -108,7 +108,7 @@ POST /tools/analyze_scissors_gaps
 {
   "marketData": [...],
   "mekkoData": [...],
-  "selectedBrand": "立普妥",
+  "selectedBrand": "产品1",
   "selectedXAxisKey": "province",
   "selectedYAxisKey": "brand",
   "availableDimensions": [...],
@@ -126,7 +126,7 @@ POST /tools/analyze_problem_causes
 ```json
 {
   "scissorsGaps": [...],
-  "selectedBrand": "立普妥",
+  "selectedBrand": "产品1",
   "marketData": [...],
   "availableDimensions": [...],
   "maxProblems": 10
@@ -144,10 +144,10 @@ POST /tools/query_market_data
 {
   "functionName": "queryByDosage",
   "args": {
-    "dosage": "10mg",
-    "brand": "立普妥"
+    "dosage": "低剂量",
+    "brand": "产品1"
   },
-  "selectedBrand": "立普妥"
+  "selectedBrand": "产品1"
 }
 ```
 
