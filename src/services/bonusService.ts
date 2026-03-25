@@ -346,7 +346,7 @@ export async function understandStrategyAndAdjust(
   const systemPrompt = `你是一个专业的医药行业奖金方案优化顾问。你需要理解用户的策略性指令，并生成具体的奖金包调整方案。
 
 用户可能输入的指令类型包括：
-1. 品牌策略：如"发展Tier2产品"、"重点支持Tier1品牌"、"提升产品组A"
+1. 品牌策略：如"发展Tier2产品"、"重点支持Tier1品牌"、"提升产品3"
 2. 指标策略：如"结果指标给多一点"、"过程指标增加权重"、"提高渠道覆盖率指标"
 3. 组合策略：如"发展Tier2产品，结果指标给多一点"
 
@@ -361,8 +361,7 @@ export async function understandStrategyAndAdjust(
   "adjustments": [
     {
       "brandId": "brand-3",
-      "brandName": "产品组A",
-      "subBrandName": "产品3",
+      "brandName": "产品3",
       "totalRatioChange": 2,
       "indicatorAdjustments": [
         {
@@ -374,7 +373,7 @@ export async function understandStrategyAndAdjust(
       ]
     }
   ],
-  "explanation": "根据'发展Tier2产品，结果指标给多一点'的策略，增加了产品组A品牌（特别是产品3）的总奖金包，并提高了结果指标的权重。",
+  "explanation": "根据'发展Tier2产品，结果指标给多一点'的策略，增加了产品3的总奖金包，并提高了结果指标的权重。",
   "totalRatioAfter": 100
 }`;
 
@@ -436,8 +435,7 @@ function generateRuleBasedAdjustment(
   const lowerInstruction = userInstruction.toLowerCase();
 
   // 识别Tier2品牌
-  const nonTier1Brands = ['产品组A', '产品组B', '产品8', '产品9', '产品10', '迪敏思'];
-  // const cvBrands = ['产品1', '产品2', '产品7']; // 保留用于未来扩展
+  const nonTier1Brands = ['产品3', '产品4', '产品5'];
 
   // 策略1: 发展Tier2产品
   if (lowerInstruction.includes('tier2') || lowerInstruction.includes('tier 2') || lowerInstruction.includes('二线') || 

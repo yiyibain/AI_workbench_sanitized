@@ -20,31 +20,24 @@ export default function BonusRatioSuggestion() {
     // 初始化时，为有子品牌的品牌创建子品牌包
     return initialBonusPackages.map((pkg) => {
       const brand = TEN_BRANDS.find((b) => b.id === pkg.brandId);
-      if (brand?.subBrands && brand.subBrands.length > 0) {
-        // 根据图片和用户确认，子品牌的值是独立的：
-        // 产品组A: 产品312%, 产品46%
-        // 产品组B: 产品58%, 产品64%
-        // 产品9/产品10/迪敏思: 产品98%, 产品102%, 迪敏思2%
+      const subBrands = brand?.subBrands;
+      if (subBrands && subBrands.length > 0) {
         let subBrandRatios: number[] = [];
         if (pkg.brandId === 'brand-3') {
-          // 产品组A: 产品312%, 产品46%
           subBrandRatios = [12, 6];
         } else if (pkg.brandId === 'brand-4') {
-          // 产品组B: 产品58%, 产品64%
           subBrandRatios = [8, 4];
         } else if (pkg.brandId === 'brand-7') {
-          // 产品9/产品10/迪敏思: 产品98%, 产品102%, 迪敏思2%
           subBrandRatios = [8, 2, 2];
         } else {
-          // 默认平均分配
-          const ratioPerSubBrand = pkg.totalRatio / brand.subBrands.length;
-          subBrandRatios = brand.subBrands.map(() => ratioPerSubBrand);
+          const ratioPerSubBrand = pkg.totalRatio / subBrands.length;
+          subBrandRatios = subBrands.map(() => ratioPerSubBrand);
         }
         
         return {
           ...pkg,
-          subBrandPackages: brand.subBrands.map((subBrand, index) => {
-            const subRatio = subBrandRatios[index] || (pkg.totalRatio / brand.subBrands.length);
+          subBrandPackages: subBrands.map((subBrand, index) => {
+            const subRatio = subBrandRatios[index] || (pkg.totalRatio / subBrands.length);
             // 根据子品牌的比例，按比例分配指标值
             const totalSubRatio = subBrandRatios.reduce((sum, r) => sum + r, 0);
             return {
@@ -756,7 +749,7 @@ export default function BonusRatioSuggestion() {
                 <br />
                 "发展Tier2产品，结果指标给多一点"
                 <br />
-                "重点支持产品组A，提高过程指标权重"
+                "重点支持产品3，提高过程指标权重"
                 <br />
                 "将产品1的总奖金包比例增加5%"
               </p>
